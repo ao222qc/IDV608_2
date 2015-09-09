@@ -1,5 +1,6 @@
 <?php
 
+
 class DateTimeView {
 
 
@@ -10,9 +11,9 @@ class DateTimeView {
 		$weekDay = date('l');
 		$numericDate = date('j');
 		$month = date('F');
-		$time = date('y:h:sa');
+		$time = date('y:h:s');
 
-		$timeString = $weekDay . " the " . $numericDate . "th of " . $month . ". The time is : " . $time;
+		$timeString = $weekDay . ", the " . $numericDate . "th of " . $month . ", The time is : " . $time;
 
 		return '<p>' . $timeString . '</p>';
 	}

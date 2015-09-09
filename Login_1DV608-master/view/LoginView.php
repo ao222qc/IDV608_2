@@ -11,7 +11,6 @@ class LoginView {
 	private static $messageId = 'LoginView::Message';
 
 	
-
 	/**
 	 * Create HTTP response
 	 *
@@ -20,12 +19,41 @@ class LoginView {
 	 * @return  void BUT writes to standard output and cookies!
 	 */
 	public function response() {
+
 		$message = '';
-		
+
 		$response = $this->generateLoginFormHTML($message);
 		//$response .= $this->generateLogoutButtonHTML($message);
 		return $response;
 	}
+
+	public function userNameLoginInput()
+	{
+		$userNameInput = $_POST[self::$name];
+
+		return $userNameInput;
+	}
+
+	public function userPasswordLoginInput()
+	{
+		$userPasswordInput = $_POST[self::$password];
+
+		return $userPasswordInput;
+	}
+
+	public function hasUserPosted()
+	{
+
+		if(isset($_POST[self::$name]) || isset($_POST[self::$password]))
+		{
+			return true;
+		}
+		else
+		{
+			return false;			
+		}
+	}
+
 
 	/**
 	* Generate HTML code on the output buffer for the logout button
@@ -71,6 +99,8 @@ class LoginView {
 	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
 	private function getRequestUserName() {
 		//RETURN REQUEST VARIABLE: USERNAME
+
+		//return $_POST[self::$name];
 	}
 	
 }
