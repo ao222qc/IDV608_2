@@ -9,11 +9,11 @@ class DateTimeView {
 		date_default_timezone_set("Europe/Stockholm");
 
 		$weekDay = date('l');
-		$numericDate = date('j');
+		$numericDate = date('jS');
 		$month = date('F');
 		$time = date('y:h:s');
 
-		$timeString = $weekDay . ", the " . $numericDate . "th of " . $month . ", The time is : " . $time;
+		$timeString = $weekDay . ", the " . $numericDate . " of " . $month . ", the time is : " . $time;
 
 		return '<p>' . $timeString . '</p>';
 	}

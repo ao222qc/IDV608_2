@@ -21,6 +21,7 @@ class LoginController{
 		if($this->logInView->hasUserPosted())
 		{			
 			 $name = $this->getUserName();
+			 
 			 $password = $this->getUserPassword();
 
 			 $this->userInputToModel();
@@ -42,10 +43,14 @@ class LoginController{
 		 return $this->userInputPassword;
 
 	}
+	//Sends the user input to the model class.
+	public function userInputToModel(){
 
-	public function userInputToModel()
-	{
 		$this->logInModel->checkUserInput($this->userInputName, $this->userInputPassword);
+	}
+	//calls function that returns true/false wether the user has entered the correct credentials, returns this value to the index file (bool in render)
+	public function checkIfLoggedIn(){
+		return $this->logInModel->isUserLoggedIn();
 	}
 
 }

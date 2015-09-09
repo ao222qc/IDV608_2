@@ -9,12 +9,12 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
-	private $model;
+	private $logInModel;
 
 	
-	public function __construct(LoginModel $model)
+	public function __construct(LoginModel $logInModel)
 	{
-		$this->model = $model;
+		$this->logInModel = $logInModel;
 	}
 
 	/**
@@ -26,10 +26,21 @@ class LoginView {
 	 */
 	public function response() {
 
-		$message = $this->model->getInputResultString();
+		$message = '';
+		$response = '';
 
-		$response = $this->generateLoginFormHTML($message);
+		$message = $this->logInModel->getInputResultString();
+
+		if(!$this->logInModel->isUserLoggedIn())
+		{
+			$response = $this->generateLoginFormHTML($message);	
+		}
+		else
+		{
+			$response .= $this->generateLogoutButtonHTML($message);
+		}	
 		//$response .= $this->generateLogoutButtonHTML($message);
+		
 		return $response;
 	}
 

@@ -24,10 +24,9 @@ $lv = new LayoutView();
 
 $loginController = new LoginController($v, $loginModel);
 $loginController->checkUserAction();
+$isLoggedIn = $loginController->checkIfLoggedIn();
 
 
 
-
-
-$lv->render(false, $v, $dtv);
+$lv->render($isLoggedIn, $v, $dtv);
 
