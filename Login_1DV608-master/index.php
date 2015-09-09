@@ -16,10 +16,10 @@ error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
 //CREATE OBJECTS OF THE VIEWS
-$v = new LoginView();
+$loginModel = new LoginModel();
+$v = new LoginView($loginModel);
 $dtv = new DateTimeView();
 $lv = new LayoutView();
-$loginModel = new LoginModel();
 
 
 $loginController = new LoginController($v, $loginModel);

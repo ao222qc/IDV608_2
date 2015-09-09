@@ -9,8 +9,14 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
+	private $model;
 
 	
+	public function __construct(LoginModel $model)
+	{
+		$this->model = $model;
+	}
+
 	/**
 	 * Create HTTP response
 	 *
@@ -20,7 +26,7 @@ class LoginView {
 	 */
 	public function response() {
 
-		$message = '';
+		$message = $this->model->getInputResultString();
 
 		$response = $this->generateLoginFormHTML($message);
 		//$response .= $this->generateLogoutButtonHTML($message);

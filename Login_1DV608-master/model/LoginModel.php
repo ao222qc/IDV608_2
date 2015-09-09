@@ -1,18 +1,13 @@
 <?php
 
-
 class LoginModel {
-
 
 	private $suppliedUserName;
 	private $suppliedPassword;
 	private static $correctUserName = 'Admin';
 	private static $correctPassword = 'password';
-
-	public function __construct()
-	{
-
-	}
+	private $response;
+	private $view;
 
 	public function checkUserInput($suppliedUserName, $suppliedPassword)
 	{
@@ -25,6 +20,7 @@ class LoginModel {
 		if($this->suppliedUserName == NULL && $this->suppliedPassword == NULL)
 		{
 			echo 'Username is missing';
+			$this->response = 'Username is missing';
 		}
 		//1.3 Failed login with only username.
 		//TODO Fill in admin as Username!
@@ -33,12 +29,14 @@ class LoginModel {
 		else if ($this->suppliedUserName != NULL && $this->suppliedPassword == NULL)
 		{
 			echo 'Password is missing';
+			$this->response = 'Password is missing';
 		}
 		//1.4: Failed login with only password.
 		//return false
 		else if ($this->suppliedUserName == NULL && $this->suppliedPassword != NULL)
 		{
 			echo 'Username is missing';
+			$this->response = 'Username is missing';
 		}
 		//1.5: Failed login with wrong password but existing username
 		//return false
@@ -46,6 +44,7 @@ class LoginModel {
 		else if ($this->suppliedUserName == self::$correctUserName && $this->suppliedPassword != self::$correctPassword)
 		{
 			echo 'Wrong name or password';
+			$this->response = 'Wrong name or password';
 		}
 		//1.6: Failed login with existing password but wrong username
 		//return false
@@ -54,6 +53,7 @@ class LoginModel {
 		else if ($this->suppliedUserName != self::$correctUserName && $this->suppliedPassword == self::$correctPassword)
 		{
 			echo "Wrong name or password";
+			$this->response = 'Wrong name of password';
 		}
 		//1.7: Successful login with correct Username and Password
 		//The text "Logged in", is shown.
@@ -63,7 +63,13 @@ class LoginModel {
 		else if($this->suppliedUserName == self::$correctUserName && $this->suppliedPassword == self::$correctPassword)
 		{
 			echo 'you are logged in!';
+			$this->response = 'Welcome';
 		}
+	}
+
+	public function getInputResultString()
+	{
+		return $this->response;
 	}
 	
 }
