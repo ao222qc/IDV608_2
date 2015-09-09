@@ -11,9 +11,10 @@ class DateTimeView {
 		$weekDay = date('l');
 		$numericDate = date('jS');
 		$month = date('F');
+		$year = date('Y');
 		$time = date('y:h:s');
 
-		$timeString = $weekDay . ", the " . $numericDate . " of " . $month . ", the time is : " . $time;
+		$timeString = $weekDay . ", the " . $numericDate . " of " . $month . " " . $year . ", The time is " . $time;
 
 		return '<p>' . $timeString . '</p>';
 	}

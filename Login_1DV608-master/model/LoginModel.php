@@ -26,8 +26,7 @@ class LoginModel {
 		if($this->suppliedUserName == NULL && $this->suppliedPassword == NULL ||
 		 $this->suppliedUserName == NULL && $this->suppliedPassword != NULL)
 		{
-			$this->response = 'Username is missing';
-			
+			$this->response = 'Username is missing';		
 		}
 		//1.3 Failed login with only username.
 		//TODO Fill in admin as Username!

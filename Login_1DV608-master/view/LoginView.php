@@ -39,8 +39,7 @@ class LoginView {
 		{
 			$response .= $this->generateLogoutButtonHTML($message);
 		}	
-		//$response .= $this->generateLogoutButtonHTML($message);
-		
+
 		return $response;
 	}
 
@@ -70,7 +69,6 @@ class LoginView {
 			return false;			
 		}
 	}
-
 
 	/**
 	* Generate HTML code on the output buffer for the logout button
