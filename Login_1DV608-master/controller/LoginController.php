@@ -2,13 +2,11 @@
 
 class LoginController{
 
-	private $userInputName;
-	private $userInputPassword;
 	private $logInView;
 	private $logInModel;
 
 
-	//Constructor initiates object of LoginView
+	//Constructor initiates object of LoginView 'n' model
 	public function __construct(LoginView $logInView, LoginModel $logInModel){
 
 		$this->logInView = $logInView;
@@ -18,39 +16,38 @@ class LoginController{
 	//Calls function in LoginView that returnes true/false based on if $_POST 'is set'
 	public function checkUserAction(){
 		
-		if($this->logInView->hasUserPosted())
-		{			
-			 $name = $this->getUserName();
-			 
-			 $password = $this->getUserPassword();
+		if($this->logInView->hasUserPosted()){
 
-			 $this->userInputToModel();
+		    $this->sendUserInputToModel();
 		}
 		return null;
 	}
 
-	public function getUserName(){
+	public function sendUserInputToModel(){
 
-		 $this->userInputName = $this->logInView->userNameLoginInput();	
+		$this->logInModel->checkUserInput($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput());
 
-		 return $this->userInputName;
+		return null;
+	}
+
+	//calls function that returns true/false wether the user has entered the correct credentials, returns this value to the index file (bool in render)
+	public function checkIfLoggedIn(){
+
+		return $this->logInModel->isUserLoggedIn();
+	}
+}
+
+
+
+
+
+	/*public function getUserName(){
+	
+		 return $this->logInView->userNameLoginInput();
 	}
 
 	public function getUserPassword(){
 
-		 $this->userInputPassword = $this->logInView->userPasswordLoginInput();
+		 return $this->logInView->userPasswordLoginInput();
 
-		 return $this->userInputPassword;
-
-	}
-	//Sends the user input to the model class.
-	public function userInputToModel(){
-
-		$this->logInModel->checkUserInput($this->userInputName, $this->userInputPassword);
-	}
-	//calls function that returns true/false wether the user has entered the correct credentials, returns this value to the index file (bool in render)
-	public function checkIfLoggedIn(){
-		return $this->logInModel->isUserLoggedIn();
-	}
-
-}
+	}*/

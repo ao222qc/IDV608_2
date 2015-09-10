@@ -34,7 +34,7 @@ class LoginModel {
 		
 		else if ($this->suppliedUserName != NULL && $this->suppliedPassword == NULL)
 		{
-			$this->response = 'Password is missing';			
+			$this->response = 'Password is missing';		
 		}
 
 		//1.5: Failed login with wrong password but existing username

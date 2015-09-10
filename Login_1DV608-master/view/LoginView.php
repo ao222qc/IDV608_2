@@ -60,7 +60,7 @@ class LoginView {
 	public function hasUserPosted()
 	{
 
-		if(isset($_POST[self::$name]) || isset($_POST[self::$password]))
+		if(isset($_POST[self::$login]) || isset($_POST[self::$name]) || isset($_POST[self::$password]))
 		{
 			return true;
 		}
