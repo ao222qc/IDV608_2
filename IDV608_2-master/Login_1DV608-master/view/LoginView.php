@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 class LoginView {
 	private static $login = 'LoginView::Login';
@@ -10,7 +11,6 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 	private $logInModel;
-
 	
 	public function __construct(LoginModel $logInModel)
 	{
@@ -31,18 +31,45 @@ class LoginView {
 
 		$message = $this->logInModel->getInputResultString();
 
-		if(!$this->logInModel->isUserLoggedIn())
+		if($_SESSION['isUserLoggedIn'] == NULL)
 		{
-			$response = $this->generateLoginFormHTML($message);	
-		}
-		else
-		{
-			$response .= $this->generateLogoutButtonHTML($message);
-		}	
 
+			if(!$this->logInModel->isUserLoggedIn())
+			{
+				$response = $this->generateLoginFormHTML($message);	
+			}
+			else 
+			{
+				$response .= $this->generateLogoutButtonHTML($message);
+				$_SESSION['isUserLoggedIn'] = true;
+			}	
+
+		}
+		else if ($_SESSION['isUserLoggedIn'] === true)
+		{	
+			$response .= $this->generateLogoutButtonHTML($message);
+		}
+
+		
 		return $response;
 	}
 
+	//Nifty to drop eventual session variable if true
+	//TODO ASK RASMUS
+	public function hasUserLoggedOut()
+	{
+		if(isset($_POST[self::$logout]))
+		{
+			session_destroy();
+			echo 'hej';
+			return true;		
+		}		
+		else
+		{
+			return false;
+		}
+	}
+	
 	public function userNameLoginInput()
 	{
 		$userNameInput = $_POST[self::$name];
@@ -60,7 +87,7 @@ class LoginView {
 	public function hasUserPosted()
 	{
 
-		if(isset($_POST[self::$login]) || isset($_POST[self::$name]) || isset($_POST[self::$password]))
+		if(isset($_POST[self::$login]))
 		{
 			return true;
 		}

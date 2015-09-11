@@ -12,9 +12,6 @@ class LoginModel {
 
 	public function checkUserInput($suppliedUserName, $suppliedPassword)
 	{
-
-		$this->isLoggedIn = false;
-
 		$this->suppliedUserName = trim($suppliedUserName);
 
 		$this->suppliedPassword = trim($suppliedPassword);
@@ -27,6 +24,7 @@ class LoginModel {
 		 $this->suppliedUserName == NULL && $this->suppliedPassword != NULL)
 		{
 			$this->response = 'Username is missing';		
+			$this->isLoggedIn = false;
 		}
 		//1.3 Failed login with only username.
 		//TODO Fill in admin as Username!
@@ -35,6 +33,7 @@ class LoginModel {
 		else if ($this->suppliedUserName != NULL && $this->suppliedPassword == NULL)
 		{
 			$this->response = 'Password is missing';		
+			$this->isLoggedIn = false;
 		}
 
 		//1.5: Failed login with wrong password but existing username
@@ -49,6 +48,7 @@ class LoginModel {
 		 $this->suppliedUserName != self::$correctUserName && $this->suppliedPassword == self::$correctPassword)
 		{
 			$this->response = 'Wrong name or password';
+			$this->isLoggedIn = false;
 		}
 
 		//1.7: Successful login with correct Username and Password
