@@ -36,18 +36,3 @@ class LoginController{
 		return $this->logInModel->isUserLoggedIn();
 	}
 }
-
-
-
-
-
-	/*public function getUserName(){
-	
-		 return $this->logInView->userNameLoginInput();
-	}
-
-	public function getUserPassword(){
-
-		 return $this->logInView->userPasswordLoginInput();
-
-	}*/
