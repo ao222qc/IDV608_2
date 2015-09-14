@@ -30,8 +30,14 @@ class LoginController{
 
 	public function sendUserInputToModel(){
 
-		$this->logInModel->checkUserInput($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput());
-
+		try
+		{
+			$this->logInModel->checkUserInput($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput());
+		}
+		catch(Exception $e)
+		{
+			throw new \Exception('Unexpected error occured! User data could not be handled.');
+		}
 		return null;
 	}
 
@@ -39,7 +45,7 @@ class LoginController{
 	//Value returned by function is stored in a session variable.
 	public function checkIfLoggedIn(){
 
-		return $this->logInModel->checkUserLoginSession();
+		return $this->logInModel->userLoggedInSession();
 	}
 
 }

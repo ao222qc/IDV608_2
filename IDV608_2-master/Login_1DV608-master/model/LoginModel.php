@@ -11,15 +11,24 @@ class LoginModel {
 	private $view;
 	private $isLoggedIn;
 
+	//Eventually make model for checking SQL injections / dangerous input via regex.
+
+	public function __construct()
+	{
+
+		if(!isset($_SESSION['userLoginSession']))
+		{
+			$_SESSION['userLoginSession'] = false;
+		}
+
+
+	}
+
 	public function checkUserInput($suppliedUserName, $suppliedPassword)
 	{
 		$this->suppliedUserName = trim($suppliedUserName);
 
 		$this->suppliedPassword = trim($suppliedPassword);
-
-		//1.2 Failed login with nothing entered in fields.
-		//1.4: Failed login with only password.
-		//return false
 
 		if($this->suppliedUserName == NULL && $this->suppliedPassword == NULL ||
 		 $this->suppliedUserName == NULL && $this->suppliedPassword != NULL)
@@ -27,23 +36,13 @@ class LoginModel {
 			$this->response = 'Username is missing';		
 			$this->isLoggedIn = false;
 		}
-		//1.3 Failed login with only username.
-		//TODO Fill in admin as Username!
-		//return false
-		
+
 		else if ($this->suppliedUserName != NULL && $this->suppliedPassword == NULL)
 		{
 			$this->response = 'Password is missing';		
 			$this->isLoggedIn = false;
 		}
 
-		//1.5: Failed login with wrong password but existing username
-		//return false
-		//fill in admin as username
-		//1.6: Failed login with existing password but wrong username
-		//return false
-		//password empty
-		//admin filled in
 
 		else if ($this->suppliedUserName == self::$correctUserName && $this->suppliedPassword != self::$correctPassword ||
 		 $this->suppliedUserName != self::$correctUserName && $this->suppliedPassword == self::$correctPassword)
@@ -51,12 +50,7 @@ class LoginModel {
 			$this->response = 'Wrong name or password';
 			$this->isLoggedIn = false;
 		}
-
-		//1.7: Successful login with correct Username and Password
-		//The text "Logged in", is shown.
-		//Feedback: "Welcome" is shown
-		//A button for logout is shown.
-		//(No login form)		
+	
 
 		else if($this->suppliedUserName == self::$correctUserName && $this->suppliedPassword == self::$correctPassword)
 		{
@@ -71,19 +65,18 @@ class LoginModel {
 		return $this->response;
 	}
 	//function returns a bool if user has entered correct credentials
-	public function isUserLoggedIn(){
+	private function isUserLoggedIn(){
 
 		return $this->isLoggedIn;
 	}
 
-	public function checkUserLoginSession(){
+	public function userLoggedInSession(){
 
 		if($this->isUserLoggedIn())
 		{
 			$_SESSION['userLoginSession'] = true;			
 		}
 		return $_SESSION['userLoginSession'];
-
 	}
 
 	//This is checked in controller if user has 'posted' logout button, this function in the model is then called and the session variable is set to false.
@@ -93,9 +86,30 @@ class LoginModel {
 
 		$_SESSION['userLoginSession'] = false;
 
-		return $_SESSION['userLoginSession'];
-	}
-
-
-	
+		return false;
+	}	
 }
+
+
+		//1.2 Failed login with nothing entered in fields.
+		//1.4: Failed login with only password.
+		//return false
+
+		//1.3 Failed login with only username.
+		//TODO Fill in admin as Username!
+		//return false
+
+
+		//1.5: Failed login with wrong password but existing username
+		//return false
+		//fill in admin as username
+		//1.6: Failed login with existing password but wrong username
+		//return false
+		//password empty
+		//admin filled in
+		
+				//1.7: Successful login with correct Username and Password
+		//The text "Logged in", is shown.
+		//Feedback: "Welcome" is shown
+		//A button for logout is shown.
+		//(No login form)	

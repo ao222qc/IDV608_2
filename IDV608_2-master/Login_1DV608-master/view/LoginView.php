@@ -10,7 +10,8 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 	private $logInModel;
-	
+	private static $keepInputtedUserName;
+
 	public function __construct(LoginModel $logInModel)
 	{
 		$this->logInModel = $logInModel;
@@ -27,14 +28,19 @@ class LoginView {
 
 		$message = '';
 		$response = '';
+		self::$keepInputtedUserName = '';
 
 		$message = $this->logInModel->getInputResultString();
 
-			if(!$this->logInModel->checkUserLoginSession())
+			if(!$this->logInModel->userLoggedInSession())
 			{
+				if($this->hasUserTriedLogin())
+				{
+					self::$keepInputtedUserName = $this->userNameLoginInput();
+				}
 				$response = $this->generateLoginFormHTML($message);	
 			}
-			else if($this->logInModel->checkUserLoginSession())
+			else if($this->logInModel->userLoggedInSession())
 			{
 				$response .= $this->generateLogoutButtonHTML($message);
 			}	
@@ -45,40 +51,23 @@ class LoginView {
 	//Checks if logoutbutton is 'posted'.
 	public function hasUserLoggedOut()
 	{
-		if(isset($_POST[self::$logout]))
-		{
-			return true;		
-		}		
-
-		return false;
+		return isset($_POST[self::$logout]);
 	}
 	
 	public function userNameLoginInput()
 	{
-		$userNameInput = $_POST[self::$name];
-
-		return $userNameInput;
+		return $_POST[self::$name];
 	}
 
 	public function userPasswordLoginInput()
 	{
-		$userPasswordInput = $_POST[self::$password];
-
-		return $userPasswordInput;
+		return  $_POST[self::$password];
 	}
 
 	//If the login button has been posted the user has tried to log in.
 	public function hasUserTriedLogin()
 	{
-
-		if(isset($_POST[self::$login]))
-		{
-			return true;
-		}
-		else
-		{
-			return false;			
-		}
+		return isset($_POST[self::$login]);
 	}
 
 	/**
@@ -108,7 +97,7 @@ class LoginView {
 					<p id="' . self::$messageId . '">' . $message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="'. self::$keepInputtedUserName . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
