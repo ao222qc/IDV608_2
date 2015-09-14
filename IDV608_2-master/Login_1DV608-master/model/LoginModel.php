@@ -1,4 +1,5 @@
 <?php
+Session_start();
 
 class LoginModel {
 
@@ -65,14 +66,36 @@ class LoginModel {
 	}
 
 	//function to call to access the response based on input
-	public function getInputResultString()
-	{
+	public function getInputResultString(){
+
 		return $this->response;
 	}
 	//function returns a bool if user has entered correct credentials
-	public function isUserLoggedIn()
-	{
+	public function isUserLoggedIn(){
+
 		return $this->isLoggedIn;
 	}
+
+	public function checkUserLoginSession(){
+
+		if($this->isUserLoggedIn())
+		{
+			$_SESSION['userLoginSession'] = true;			
+		}
+		return $_SESSION['userLoginSession'];
+
+	}
+
+	//This is checked in controller if user has 'posted' logout button, this function in the model is then called and the session variable is set to false.
+	public function userLoggedOut(){
+
+		$this->response = 'Bye bye!';
+
+		$_SESSION['userLoginSession'] = false;
+
+		return $_SESSION['userLoginSession'];
+	}
+
+
 	
 }

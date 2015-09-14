@@ -1,5 +1,4 @@
 <?php
-Session_start();
 
 class LoginController{
 
@@ -14,15 +13,17 @@ class LoginController{
 		$this->logInModel = $logInModel;
 	}
 
-	//Calls function in LoginView that returnes true/false based on if $_POST 'is set' (login or logout)
+	//Checks functions in loginview that returns true/false wether values have been 'posted' or not. 
+	//I.E login or logout button.
 	public function checkUserAction(){
-
-					$this->logInView->hasUserLoggedOut();
-		
-		if($this->logInView->hasUserPosted()){
+	
+		if($this->logInView->hasUserTriedLogin()){
 
 			$this->sendUserInputToModel();
-
+		}
+		else if($this->logInView->hasUserLoggedOut())
+		{
+			$this->logInModel->userLoggedOut();
 		}
 		return null;
 	}
@@ -35,17 +36,10 @@ class LoginController{
 	}
 
 	//calls function that returns true/false wether the user has entered the correct credentials, returns this value to the index file (bool in render)
-	//TODO: Implement - ask model if logged in, pass this on to view class where to store in session variable.
+	//Value returned by function is stored in a session variable.
 	public function checkIfLoggedIn(){
 
-
-		//return $this->logInView->checkSessionState();
-		return $this->logInModel->isUserLoggedIn();
-	}
-
-	public function getUserSessionFromView(){
-
-			echo ' hej';
+		return $this->logInModel->checkUserLoginSession();
 	}
 
 }

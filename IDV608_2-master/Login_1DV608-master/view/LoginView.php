@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 class LoginView {
 	private static $login = 'LoginView::Login';
@@ -31,43 +30,27 @@ class LoginView {
 
 		$message = $this->logInModel->getInputResultString();
 
-		if($_SESSION['isUserLoggedIn'] == NULL)
-		{
-
-			if(!$this->logInModel->isUserLoggedIn())
+			if(!$this->logInModel->checkUserLoginSession())
 			{
 				$response = $this->generateLoginFormHTML($message);	
 			}
-			else 
+			else if($this->logInModel->checkUserLoginSession())
 			{
 				$response .= $this->generateLogoutButtonHTML($message);
-				$_SESSION['isUserLoggedIn'] = true;
 			}	
 
-		}
-		else if ($_SESSION['isUserLoggedIn'] === true)
-		{	
-			$response .= $this->generateLogoutButtonHTML($message);
-		}
-
-		
 		return $response;
 	}
 
-	//Nifty to drop eventual session variable if true
-	//TODO ASK RASMUS
+	//Checks if logoutbutton is 'posted'.
 	public function hasUserLoggedOut()
 	{
 		if(isset($_POST[self::$logout]))
 		{
-			session_destroy();
-			echo 'hej';
 			return true;		
 		}		
-		else
-		{
-			return false;
-		}
+
+		return false;
 	}
 	
 	public function userNameLoginInput()
@@ -84,7 +67,8 @@ class LoginView {
 		return $userPasswordInput;
 	}
 
-	public function hasUserPosted()
+	//If the login button has been posted the user has tried to log in.
+	public function hasUserTriedLogin()
 	{
 
 		if(isset($_POST[self::$login]))
