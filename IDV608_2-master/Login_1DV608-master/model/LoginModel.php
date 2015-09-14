@@ -20,8 +20,6 @@ class LoginModel {
 		{
 			$_SESSION['userLoginSession'] = false;
 		}
-
-
 	}
 
 	public function checkUserInput($suppliedUserName, $suppliedPassword)
@@ -54,7 +52,16 @@ class LoginModel {
 
 		else if($this->suppliedUserName == self::$correctUserName && $this->suppliedPassword == self::$correctPassword)
 		{
-			$this->response = 'Welcome';	
+			//TEMP SOLUTION!
+			//If user is already logged in, don't show welcome message.
+			if($_SESSION['userLoginSession'])
+			{
+				$this->response = '';
+			}
+			else
+			{
+				$this->response = 'Welcome';	
+			}
 			$this->isLoggedIn = true;	
 		}
 	}
@@ -74,7 +81,7 @@ class LoginModel {
 
 		if($this->isUserLoggedIn())
 		{
-			$_SESSION['userLoginSession'] = true;			
+			$_SESSION['userLoginSession'] = true;
 		}
 		return $_SESSION['userLoginSession'];
 	}
@@ -82,11 +89,22 @@ class LoginModel {
 	//This is checked in controller if user has 'posted' logout button, this function in the model is then called and the session variable is set to false.
 	public function userLoggedOut(){
 
-		$this->response = 'Bye bye!';
+		//Temp solution!! 
+		//If user is already logged out once this is requested, set response to empty string.
+		if($_SESSION['userLoginSession'] === false)
+		{
+			$this->response = '';
+		}
+		else
+		{
+			$this->response = 'Bye bye!';
+		}
 
 		$_SESSION['userLoginSession'] = false;
 
-		return false;
+		session_destroy();
+
+		return $_SESSION['userLoginSession'];
 	}	
 }
 

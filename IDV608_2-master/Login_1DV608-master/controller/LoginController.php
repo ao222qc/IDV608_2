@@ -19,7 +19,8 @@ class LoginController{
 	
 		if($this->logInView->hasUserTriedLogin()){
 
-			$this->sendUserInputToModel();
+				$this->sendUserInputToModel();	
+
 		}
 		else if($this->logInView->hasUserLoggedOut())
 		{
@@ -36,7 +37,7 @@ class LoginController{
 		}
 		catch(Exception $e)
 		{
-			throw new \Exception('Unexpected error occured! User data could not be handled.');
+			throw new Exception('Unexpected error occured! User data could not be handled.');
 		}
 		return null;
 	}
@@ -44,6 +45,7 @@ class LoginController{
 	//calls function that returns true/false wether the user has entered the correct credentials, returns this value to the index file (bool in render)
 	//Value returned by function is stored in a session variable.
 	public function checkIfLoggedIn(){
+
 
 		return $this->logInModel->userLoggedInSession();
 	}

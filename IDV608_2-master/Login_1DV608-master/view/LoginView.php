@@ -34,16 +34,20 @@ class LoginView {
 
 			if(!$this->logInModel->userLoggedInSession())
 			{
+				$response = $this->generateLoginFormHTML($message);
+
 				if($this->hasUserTriedLogin())
 				{
 					self::$keepInputtedUserName = $this->userNameLoginInput();
 				}
-				$response = $this->generateLoginFormHTML($message);	
+				
 			}
 			else if($this->logInModel->userLoggedInSession())
 			{
 				$response .= $this->generateLogoutButtonHTML($message);
-			}	
+			}
+
+			//$url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
 		return $response;
 	}
