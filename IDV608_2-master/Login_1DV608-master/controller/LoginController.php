@@ -19,7 +19,7 @@ class LoginController{
 	
 		if($this->logInView->hasUserTriedLogin()){
 
-				$this->sendUserInputToModel();	
+			$this->sendUserInputToModel();	
 
 		}
 		else if($this->logInView->hasUserLoggedOut())

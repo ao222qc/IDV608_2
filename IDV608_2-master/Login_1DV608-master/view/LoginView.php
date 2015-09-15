@@ -15,6 +15,12 @@ class LoginView {
 	public function __construct(LoginModel $logInModel)
 	{
 		$this->logInModel = $logInModel;
+
+		if(!isset($_SESSION['displayMessage']))
+		{
+			$_SESSION['displayMessage'] = true;
+		}
+		
 	}
 
 	/**
@@ -30,16 +36,16 @@ class LoginView {
 		$response = '';
 		self::$keepInputtedUserName = '';
 
-		$message = $this->logInModel->getInputResultString();
+		$message = $this->userInputResponse();
 
 			if(!$this->logInModel->userLoggedInSession())
 			{
-				$response = $this->generateLoginFormHTML($message);
-
 				if($this->hasUserTriedLogin())
 				{
 					self::$keepInputtedUserName = $this->userNameLoginInput();
 				}
+
+				$response = $this->generateLoginFormHTML($message);
 				
 			}
 			else if($this->logInModel->userLoggedInSession())
@@ -47,9 +53,47 @@ class LoginView {
 				$response .= $this->generateLogoutButtonHTML($message);
 			}
 
-			//$url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
 		return $response;
+	}
+
+	public function userInputResponse()
+	{
+		$message = '';
+
+
+		if($this->hasUserTriedLogin())
+		{
+			if($this->logInModel->userLoggedInSession() && $_SESSION['displayMessage'])
+			{
+				$message = 'Welcome';
+				$_SESSION['displayMessage'] = false;
+			}
+			else
+			{
+				if($_POST[self::$name] == NULL)
+				{
+					$message = 'Username is missing';
+				}
+				else if($_POST[self::$password] == NULL)
+				{
+					$message = 'Password is missing';
+				}
+				else if(!$this->logInModel->userLoggedInSession())
+				{
+					$message = 'Wrong name or password';
+				}
+			}
+		}
+		else if($this->hasUserLoggedOut())
+		{
+			if(!$_SESSION['displayMessage'])
+			{
+				$message = 'Bye bye!';
+			}
+			session_destroy();
+		}
+
+		return $message;
 	}
 
 	//Checks if logoutbutton is 'posted'.

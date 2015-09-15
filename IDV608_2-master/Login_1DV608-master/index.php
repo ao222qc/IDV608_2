@@ -28,3 +28,8 @@ $isLoggedIn = $loginController->checkIfLoggedIn();
 
 $lv->render($isLoggedIn, $v, $dtv);
 
+
+
+//http://ao222qc.web44.net/Login_1DV608-master/
+//Link to published version.
+

@@ -9,16 +9,17 @@ class LoginModel {
 	private static $correctPassword = 'password';
 	private $response;
 	private $view;
-	private $isLoggedIn;
+	private static $userLoginSession = "userLoginSession";
+
 
 	//Eventually make model for checking SQL injections / dangerous input via regex.
 
+	//If the session variable isn't set to anything, I want it to be false. As in not logged in.
 	public function __construct()
 	{
-
-		if(!isset($_SESSION['userLoginSession']))
+		if(!isset($_SESSION[self::$userLoginSession]))
 		{
-			$_SESSION['userLoginSession'] = false;
+			$_SESSION[self::$userLoginSession] = false;
 		}
 	}
 
@@ -28,83 +29,27 @@ class LoginModel {
 
 		$this->suppliedPassword = trim($suppliedPassword);
 
-		if($this->suppliedUserName == NULL && $this->suppliedPassword == NULL ||
-		 $this->suppliedUserName == NULL && $this->suppliedPassword != NULL)
+		if($this->suppliedUserName == self::$correctUserName && $this->suppliedPassword == self::$correctPassword)
 		{
-			$this->response = 'Username is missing';		
-			$this->isLoggedIn = false;
+			$_SESSION[self::$userLoginSession] = true;	
 		}
 
-		else if ($this->suppliedUserName != NULL && $this->suppliedPassword == NULL)
-		{
-			$this->response = 'Password is missing';		
-			$this->isLoggedIn = false;
-		}
-
-
-		else if ($this->suppliedUserName == self::$correctUserName && $this->suppliedPassword != self::$correctPassword ||
-		 $this->suppliedUserName != self::$correctUserName && $this->suppliedPassword == self::$correctPassword)
-		{
-			$this->response = 'Wrong name or password';
-			$this->isLoggedIn = false;
-		}
-	
-
-		else if($this->suppliedUserName == self::$correctUserName && $this->suppliedPassword == self::$correctPassword)
-		{
-			//TEMP SOLUTION!
-			//If user is already logged in, don't show welcome message.
-			if($_SESSION['userLoginSession'])
-			{
-				$this->response = '';
-			}
-			else
-			{
-				$this->response = 'Welcome';	
-			}
-			$this->isLoggedIn = true;	
-		}
+		return null;
 	}
 
-	//function to call to access the response based on input
-	public function getInputResultString(){
 
-		return $this->response;
-	}
-	//function returns a bool if user has entered correct credentials
-	private function isUserLoggedIn(){
-
-		return $this->isLoggedIn;
-	}
-
+	//function returns a bool if user is logged in.
 	public function userLoggedInSession(){
 
-		if($this->isUserLoggedIn())
-		{
-			$_SESSION['userLoginSession'] = true;
-		}
-		return $_SESSION['userLoginSession'];
+		return $_SESSION[self::$userLoginSession];
 	}
 
 	//This is checked in controller if user has 'posted' logout button, this function in the model is then called and the session variable is set to false.
 	public function userLoggedOut(){
 
-		//Temp solution!! 
-		//If user is already logged out once this is requested, set response to empty string.
-		if($_SESSION['userLoginSession'] === false)
-		{
-			$this->response = '';
-		}
-		else
-		{
-			$this->response = 'Bye bye!';
-		}
+		$_SESSION[self::$userLoginSession] = false;
 
-		$_SESSION['userLoginSession'] = false;
-
-		session_destroy();
-
-		return $_SESSION['userLoginSession'];
+		return $_SESSION[self::$userLoginSession];
 	}	
 }
 
@@ -131,3 +76,26 @@ class LoginModel {
 		//Feedback: "Welcome" is shown
 		//A button for logout is shown.
 		//(No login form)	
+
+/*
+	public function checkIfUserNameSupplied()
+	{
+		return $this->suppliedUserName != NULL;
+	}
+
+	public function checkIfPasswordSupplied()
+	{
+		return $this->suppliedPassword != NULL;
+	}
+
+	public function checkIfWrongInput()
+	{
+		if($this->suppliedUserName != self::$correctUserName || $this->suppliedPassword != self::$correctPassword)
+		{
+			return true; 
+		}
+		else
+		{
+			return false;
+		}
+	}*/
