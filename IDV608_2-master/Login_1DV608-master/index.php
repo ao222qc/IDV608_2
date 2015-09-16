@@ -19,8 +19,10 @@ $v = new LoginView($loginModel);
 $dtv = new DateTimeView();
 $lv = new LayoutView();
 
+$dvm = new DataValidationModel();
 
-$loginController = new LoginController($v, $loginModel);
+
+$loginController = new LoginController($v, $loginModel, $dvm);
 $loginController->checkUserAction();
 $isLoggedIn = false;
 $isLoggedIn = $loginController->checkIfLoggedIn();

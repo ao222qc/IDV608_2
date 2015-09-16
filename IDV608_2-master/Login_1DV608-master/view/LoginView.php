@@ -10,17 +10,11 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 	private $logInModel;
-	private static $keepInputtedUserName;
+	private $invalidInputFeedback;
 
 	public function __construct(LoginModel $logInModel)
 	{
 		$this->logInModel = $logInModel;
-
-		if(!isset($_SESSION['displayMessage']))
-		{
-			$_SESSION['displayMessage'] = true;
-		}
-		
 	}
 
 	/**
@@ -34,21 +28,14 @@ class LoginView {
 
 		$message = '';
 		$response = '';
-		self::$keepInputtedUserName = '';
 
-		$message = $this->userInputResponse();
+		$message = $this->invalidInputFeedback;
 
-			if(!$this->logInModel->userLoggedInSession())
+			if(!$this->logInModel->userLoggedIn())
 			{
-				if($this->hasUserTriedLogin())
-				{
-					self::$keepInputtedUserName = $this->userNameLoginInput();
-				}
-
-				$response = $this->generateLoginFormHTML($message);
-				
+				$response = $this->generateLoginFormHTML($message);	
 			}
-			else if($this->logInModel->userLoggedInSession())
+			else if($this->logInModel->userLoggedIn())
 			{
 				$response .= $this->generateLogoutButtonHTML($message);
 			}
@@ -56,44 +43,9 @@ class LoginView {
 		return $response;
 	}
 
-	public function userInputResponse()
-	{
-		$message = '';
-
-		if($this->hasUserTriedLogin())
-		{
-			if($this->logInModel->userLoggedInSession() && $_SESSION['displayMessage'])
-			{
-				$message = 'Welcome';
-				$_SESSION['displayMessage'] = false;
-			}
-			else
-			{
-				if($_POST[self::$name] == NULL)
-				{
-					$message = 'Username is missing';
-				}
-				else if($_POST[self::$password] == NULL)
-				{
-					$message = 'Password is missing';
-				}
-				else if(!$this->logInModel->userLoggedInSession())
-				{
-					$message = 'Wrong name or password';
-				}
-			}
-		}
-		else if($this->hasUserLoggedOut())
-		{
-			if(!$_SESSION['displayMessage'])
-			{
-				$message = 'Bye bye!';
-			}
-
-			session_destroy();
-		}
-
-		return $message;
+	public function setUserInputResponse($invalidInputFeedback)
+	{	
+		$this->invalidInputFeedback = $invalidInputFeedback;	
 	}
 
 	//Checks if logoutbutton is 'posted'.
@@ -145,7 +97,7 @@ class LoginView {
 					<p id="' . self::$messageId . '">' . $message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="'. self::$keepInputtedUserName . '" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="'. $this->userNameLoginInput() . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />

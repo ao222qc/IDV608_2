@@ -7,20 +7,9 @@ class LoginModel {
 	private $suppliedPassword;
 	private static $correctUserName = 'Admin';
 	private static $correctPassword = 'password';
-	private $response;
-	private $view;
 	private static $userLoginSession = "userLoginSession";
 
-
-	//Eventually make model for checking SQL injections / dangerous input via regex.
-
-	//If the session variable isn't set to anything, I want it to be false. As in not logged in.
-	public function __construct()
-	{
-
-	}
-
-	public function checkUserInput($suppliedUserName, $suppliedPassword)
+	public function tryLoginUser($suppliedUserName, $suppliedPassword)
 	{
 		$this->suppliedUserName = trim($suppliedUserName);
 
@@ -30,12 +19,14 @@ class LoginModel {
 		{
 			$_SESSION[self::$userLoginSession] = true;	
 		}
-
+		else
+		{
+			throw new Exception('Wrong name or password');
+		}
 	}
 
-
 	//function returns a bool if user is logged in.
-	public function userLoggedInSession(){
+	public function userLoggedIn(){
 
 		return isset($_SESSION[self::$userLoginSession]);
 	}
@@ -44,53 +35,7 @@ class LoginModel {
 	public function userLoggedOut(){
 
 		unset($_SESSION[self::$userLoginSession]);
-		
+
 	}	
 }
 
-
-		//1.2 Failed login with nothing entered in fields.
-		//1.4: Failed login with only password.
-		//return false
-
-		//1.3 Failed login with only username.
-		//TODO Fill in admin as Username!
-		//return false
-
-
-		//1.5: Failed login with wrong password but existing username
-		//return false
-		//fill in admin as username
-		//1.6: Failed login with existing password but wrong username
-		//return false
-		//password empty
-		//admin filled in
-		
-				//1.7: Successful login with correct Username and Password
-		//The text "Logged in", is shown.
-		//Feedback: "Welcome" is shown
-		//A button for logout is shown.
-		//(No login form)	
-
-/*
-	public function checkIfUserNameSupplied()
-	{
-		return $this->suppliedUserName != NULL;
-	}
-
-	public function checkIfPasswordSupplied()
-	{
-		return $this->suppliedPassword != NULL;
-	}
-
-	public function checkIfWrongInput()
-	{
-		if($this->suppliedUserName != self::$correctUserName || $this->suppliedPassword != self::$correctPassword)
-		{
-			return true; 
-		}
-		else
-		{
-			return false;
-		}
-	}*/

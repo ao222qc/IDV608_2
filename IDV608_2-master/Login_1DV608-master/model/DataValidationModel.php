@@ -12,25 +12,18 @@ class DatavalidationModel {
 
 		if($this->suppliedUserName == NULL && $this->suppliedPassword == NULL || $this->suppliedUserName == NULL)
 		{
-			//User has supplied enough data for us to try to log in with it.
-
-			throw new \Exception('Username is missing');
+			//User has not entered any data or only entered password.
+			throw new Exception('Username is missing');
 		}
 		else if($this->suppliedPassword == NULL)
 		{
 			//No password given.
-			throw new \Exception('Password is missing');
+			throw new Exception('Password is missing');
 		}
 		else
 		{
-			//Data is given fully. Nice. THen we can try to log user in.
+			//Data is given fully. Nice. Then we can try to log user in.
+			return true;
 		}
 	}
-
-	public function checkState(){
-
-		
-
-	}
-
 }
