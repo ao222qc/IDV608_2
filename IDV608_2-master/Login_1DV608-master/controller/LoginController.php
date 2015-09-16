@@ -17,16 +17,17 @@ class LoginController{
 	//I.E login or logout button.
 	public function checkUserAction(){
 	
-		if($this->logInView->hasUserTriedLogin()){
-
-
-			/*
-			*$this->dataValidationModel->checkIfUserSuppliedInput($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput()); //Set session to false or something i dunno.
-			*			
-			*
-			*
-			*
-			*/
+		if($this->logInView->hasUserTriedLogin())
+		{
+			try
+			{
+				$this->dataValidationModel->checkIfUserSuppliedInput($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput()); 
+			}	
+			catch(Exception $e)
+			{
+				//do something with $e->getMessage();
+				//$this->logInView->setErrorMessage($e->getMessage());
+			}	 
 
 			$this->tryToLogInUser();	
 
