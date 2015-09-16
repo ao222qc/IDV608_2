@@ -17,10 +17,7 @@ class LoginModel {
 	//If the session variable isn't set to anything, I want it to be false. As in not logged in.
 	public function __construct()
 	{
-		if(!isset($_SESSION[self::$userLoginSession]))
-		{
-			$_SESSION[self::$userLoginSession] = false;
-		}
+
 	}
 
 	public function checkUserInput($suppliedUserName, $suppliedPassword)
@@ -34,22 +31,20 @@ class LoginModel {
 			$_SESSION[self::$userLoginSession] = true;	
 		}
 
-		return null;
 	}
 
 
 	//function returns a bool if user is logged in.
 	public function userLoggedInSession(){
 
-		return $_SESSION[self::$userLoginSession];
+		return isset($_SESSION[self::$userLoginSession]);
 	}
 
 	//This is checked in controller if user has 'posted' logout button, this function in the model is then called and the session variable is set to false.
 	public function userLoggedOut(){
 
-		$_SESSION[self::$userLoginSession] = false;
-
-		return $_SESSION[self::$userLoginSession];
+		unset($_SESSION[self::$userLoginSession]);
+		
 	}	
 }
 

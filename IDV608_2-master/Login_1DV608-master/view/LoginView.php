@@ -60,7 +60,6 @@ class LoginView {
 	{
 		$message = '';
 
-
 		if($this->hasUserTriedLogin())
 		{
 			if($this->logInModel->userLoggedInSession() && $_SESSION['displayMessage'])
@@ -90,6 +89,7 @@ class LoginView {
 			{
 				$message = 'Bye bye!';
 			}
+
 			session_destroy();
 		}
 

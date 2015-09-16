@@ -19,7 +19,16 @@ class LoginController{
 	
 		if($this->logInView->hasUserTriedLogin()){
 
-			$this->sendUserInputToModel();	
+
+			/*
+			*$this->dataValidationModel->checkIfUserSuppliedInput($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput()); //Set session to false or something i dunno.
+			*			
+			*
+			*
+			*
+			*/
+
+			$this->tryToLogInUser();	
 
 		}
 		else if($this->logInView->hasUserLoggedOut())
@@ -29,7 +38,7 @@ class LoginController{
 		return null;
 	}
 
-	public function sendUserInputToModel(){
+	public function tryToLogInUser(){
 
 		try
 		{
@@ -37,9 +46,9 @@ class LoginController{
 		}
 		catch(Exception $e)
 		{
-			throw new Exception('Unexpected error occured! User data could not be handled.');
+			$whatWentWrong = $e->getMessage();
+			$this->view->setError($whatWentWrong);
 		}
-		return null;
 	}
 
 	//calls function that returns true/false wether the user has entered the correct credentials, returns this value to the index file (bool in render)
