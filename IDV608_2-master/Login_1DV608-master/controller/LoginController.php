@@ -21,11 +21,11 @@ class LoginController{
 		{
 			try
 			{
-				//Function to validate that the data has been inputted correctly, throws exceptions based on what data is missing.
-				//If no exceptions thrown, returns true which means we can send the data to the loginmodel to attempt a login.
 				if($this->dataValidationModel->checkIfUserSuppliedInput($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput()))
 				{
 					$this->logInModel->tryLoginUser($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput());
+					
+					$this->logInView->setWelcomeMessage();
 				}
 			}	
 			catch(Exception $e)
@@ -36,9 +36,16 @@ class LoginController{
 
 		else if($this->logInView->hasUserLoggedOut())
 		{
-			$this->logInModel->userLoggedOut();
-		}
-		return null;
+			try
+			{
+				$this->logInModel->userLoggedOut();
+				$this->logInView->setLogoutMessage();
+			}
+			catch(Exception $e)
+			{
+				$this->logInView->setUserInputResponse($e->getMessage());
+			}	
+		} 		
 	}
 
 	//calls function that returns true/false wether the user has entered the correct credentials, returns this value to the index file (bool in render)

@@ -17,7 +17,15 @@ class LoginModel {
 
 		if($this->suppliedUserName == self::$correctUserName && $this->suppliedPassword == self::$correctPassword)
 		{
-			$_SESSION[self::$userLoginSession] = true;	
+
+			if($_SESSION[self::$userLoginSession])
+			{
+				throw new Exception();
+			}
+			else
+			{
+				$_SESSION[self::$userLoginSession] = true;	
+			}
 		}
 		else
 		{
@@ -34,8 +42,14 @@ class LoginModel {
 	//This is checked in controller if user has 'posted' logout button, this function in the model is then called and the session variable is set to false.
 	public function userLoggedOut(){
 
-		unset($_SESSION[self::$userLoginSession]);
-
+		if(isset($_SESSION[self::$userLoginSession]))
+		{
+			unset($_SESSION[self::$userLoginSession]);
+		}
+		else
+		{
+			throw new Exception();
+		}
 	}	
 }
 

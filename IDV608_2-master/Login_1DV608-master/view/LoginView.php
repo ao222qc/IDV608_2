@@ -10,7 +10,9 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 	private $logInModel;
-	private $invalidInputFeedback;
+	private static $LoginMessage = 'Welcome';
+	private static $LogoutMessage = 'Bye bye!';
+	private $userInputFeedback;
 
 	public function __construct(LoginModel $logInModel)
 	{
@@ -26,26 +28,33 @@ class LoginView {
 	 */
 	public function response() {
 
-		$message = '';
 		$response = '';
-
-		$message = $this->invalidInputFeedback;
 
 			if(!$this->logInModel->userLoggedIn())
 			{
-				$response = $this->generateLoginFormHTML($message);	
+				$response = $this->generateLoginFormHTML($this->userInputFeedback);	
 			}
 			else if($this->logInModel->userLoggedIn())
 			{
-				$response .= $this->generateLogoutButtonHTML($message);
+				$response .= $this->generateLogoutButtonHTML($this->userInputFeedback);
 			}
 
 		return $response;
 	}
 
-	public function setUserInputResponse($invalidInputFeedback)
+	public function setWelcomeMessage()
+	{
+		$this->setUserInputResponse(self::$LoginMessage);
+	}
+
+	public function setLogoutMessage()
+	{
+		$this->setUserInputResponse(self::$LogoutMessage);
+	}
+
+	public function setUserInputResponse($userInputFeedback)
 	{	
-		$this->invalidInputFeedback = $invalidInputFeedback;	
+		$this->userInputFeedback = $userInputFeedback;
 	}
 
 	//Checks if logoutbutton is 'posted'.
