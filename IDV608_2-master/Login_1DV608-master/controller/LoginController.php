@@ -4,48 +4,25 @@ class LoginController{
 
 	private $logInView;
 	private $logInModel;
-	private $dataValidationModel;
-
 
 	//Constructor initiates object of LoginView 'n' model
-	public function __construct(LoginView $logInView, LoginModel $logInModel, DataValidationModel $dmv){
+	public function __construct(LoginView $logInView, LoginModel $logInModel){
 
 		$this->logInView = $logInView;
 		$this->logInModel = $logInModel;
-		$this->dataValidationModel = $dmv;
 	}
 
 	public function checkUserAction(){
 	
 		if($this->logInView->hasUserTriedLogin())
-		{
-			try
-			{
-				if($this->dataValidationModel->checkIfUserSuppliedInput($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput()))
-				{
-					$this->logInModel->tryLoginUser($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput());
-					
-					$this->logInView->setWelcomeMessage();
-				}
-			}	
-			catch(Exception $e)
-			{
-				$this->logInView->setUserInputResponse($e->getMessage());
-			}	 
+		{	
+			$this->logInView->setUserInputResponse($this->logInModel->tryLoginUser($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput()));							 
 		}
 
 		else if($this->logInView->hasUserLoggedOut())
 		{
-			try
-			{
-				$this->logInModel->userLoggedOut();
-				$this->logInView->setLogoutMessage();
-			}
-			catch(Exception $e)
-			{
-				$this->logInView->setUserInputResponse($e->getMessage());
-			}	
-		} 		
+			$this->logInView->setUserInputResponse($this->logInModel->userLoggedOut());
+		} 	
 	}
 
 	//calls function that returns true/false wether the user has entered the correct credentials, returns this value to the index file (bool in render)

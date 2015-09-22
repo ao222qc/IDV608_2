@@ -42,19 +42,25 @@ class LoginView {
 		return $response;
 	}
 
-	public function setWelcomeMessage()
-	{
-		$this->setUserInputResponse(self::$LoginMessage);
-	}
-
-	public function setLogoutMessage()
-	{
-		$this->setUserInputResponse(self::$LogoutMessage);
-	}
-
 	public function setUserInputResponse($userInputFeedback)
 	{	
-		$this->userInputFeedback = $userInputFeedback;
+		switch ($userInputFeedback)
+		{
+			case LoginModel::UNAMEFAIL:
+			$this->userInputFeedback = 'Username is missing';
+			break;
+			case LoginModel::PWORDFAIL:
+			$this->userInputFeedback = 'Password is missing';
+			break;
+			case LoginModel::LOGINSUCCESS:
+			$this->userInputFeedback = 'Welcome';
+			break;
+			case LoginModel::LOGINFAIL:
+			$this->userInputFeedback = 'Wrong name or password';
+			break;
+			case LoginModel::LOGOUTSUCCESS:
+			$this->userInputFeedback = 'Bye bye!';
+		}
 	}
 
 	//Checks if logoutbutton is 'posted'.
@@ -106,7 +112,7 @@ class LoginView {
 					<p id="' . self::$messageId . '">' . $message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="'. $this->userNameLoginInput() . '" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="'. ($this->hasUserTriedLogin() ? $this->userNameLoginInput() : "") . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />

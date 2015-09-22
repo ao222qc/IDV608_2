@@ -8,28 +8,51 @@ class LoginModel {
 	private static $correctUserName = 'Admin';
 	private static $correctPassword = 'password';
 	private static $userLoginSession = "userLoginSession";
+	const UNAMEFAIL = 1;
+	const PWORDFAIL = 2;
+	const LOGINSUCCESS = 3;
+	const LOGINFAIL = 4;
+	const LOGOUTSUCCESS = 5;
+	const SUCCESS = 6;
+
+	public function checkIfUserSuppliedInput($name, $password){
+
+		$this->suppliedUserName = trim($name);
+
+		$this->suppliedPassword = trim($password);
+
+		if($this->suppliedUserName == NULL && $this->suppliedPassword == NULL || $this->suppliedUserName == NULL)
+		{
+			return self::UNAMEFAIL;
+		}
+		else if($this->suppliedPassword == NULL)
+		{
+			return self::PWORDFAIL;
+		}
+
+		return self::SUCCESS;
+	}
 
 	public function tryLoginUser($suppliedUserName, $suppliedPassword)
 	{
-		$this->suppliedUserName = trim($suppliedUserName);
+		$valid = $this->checkIfUserSuppliedInput($suppliedUserName,$suppliedPassword);
 
-		$this->suppliedPassword = trim($suppliedPassword);
+		if ($valid != self::SUCCESS)
+			return $valid;
 
 		if($this->suppliedUserName == self::$correctUserName && $this->suppliedPassword == self::$correctPassword)
 		{
 
-			if($_SESSION[self::$userLoginSession])
-			{
-				throw new Exception();
-			}
-			else
+			if(!isset($_SESSION[self::$userLoginSession]))
 			{
 				$_SESSION[self::$userLoginSession] = true;	
+				return self::LOGINSUCCESS;
 			}
+
 		}
-		else
+		else if($this->suppliedUserName != self::$correctUserName || $this->suppliedPassword != self::$correctPassword)
 		{
-			throw new Exception('Wrong name or password');
+			return self::LOGINFAIL;
 		}
 	}
 
@@ -39,16 +62,12 @@ class LoginModel {
 		return isset($_SESSION[self::$userLoginSession]);
 	}
 
-	//This is checked in controller if user has 'posted' logout button, this function in the model is then called and the session variable is set to false.
 	public function userLoggedOut(){
 
 		if(isset($_SESSION[self::$userLoginSession]))
 		{
 			unset($_SESSION[self::$userLoginSession]);
-		}
-		else
-		{
-			throw new Exception();
+			return self::LOGOUTSUCCESS;
 		}
 	}	
 }

@@ -6,7 +6,7 @@ require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('controller/LoginController.php');
 require_once('model/LoginModel.php');
-require_once('model/DataValidationModel.php');
+
 
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
@@ -19,10 +19,7 @@ $v = new LoginView($loginModel);
 $dtv = new DateTimeView();
 $lv = new LayoutView();
 
-$dvm = new DataValidationModel();
-
-
-$loginController = new LoginController($v, $loginModel, $dvm);
+$loginController = new LoginController($v, $loginModel);
 $loginController->checkUserAction();
 $isLoggedIn = false;
 $isLoggedIn = $loginController->checkIfLoggedIn();
