@@ -36,7 +36,7 @@ class LoginView {
 
 		if($this->RegisterButtonPressed() || $this->RegisterFormSubmitted())
 		{
-			return $this->generateRegistrationFormHTML();
+			return $this->generateRegistrationFormHTML($this->userInputFeedback);
 		}
 		else
 		{	
@@ -55,23 +55,47 @@ class LoginView {
 
 	public function setUserInputResponse($userInputFeedback)
 	{	
-		switch ($userInputFeedback)
+
+		if($this->RegisterButtonPressed() || $this->RegisterFormSubmitted())
 		{
-			case LoginModel::UNAMEFAIL:
-			$this->userInputFeedback = 'Username is missing';
-			break;
-			case LoginModel::PWORDFAIL:
-			$this->userInputFeedback = 'Password is missing';
-			break;
-			case LoginModel::LOGINSUCCESS:
-			$this->userInputFeedback = 'Welcome';
-			break;
-			case LoginModel::LOGINFAIL:
-			$this->userInputFeedback = 'Wrong name or password';
-			break;
-			case LoginModel::LOGOUTSUCCESS:
-			$this->userInputFeedback = 'Bye bye!';
+			switch($userInputFeedback)
+			{
+				case RegistrationModel::uNameFail:
+				$this->userInputFeedback = 'Username has too few characters, at least 3 characters. Password has too few characters, at least 6 characters.';
+				break;
+				case RegistrationModel::pWordFail:
+				$this->userInputFeedback = 'Password has too few characters, at least 6 characters.';
+				break;
+
+
+			}
 		}
+		else
+		{
+			switch ($userInputFeedback)
+			{
+				case LoginModel::UNAMEFAIL:
+				$this->userInputFeedback = 'Username is missing';
+				break;
+				case LoginModel::PWORDFAIL:
+				$this->userInputFeedback = 'Password is missing';
+				break;
+				case LoginModel::LOGINSUCCESS:
+				$this->userInputFeedback = 'Welcome';
+				break;
+				case LoginModel::LOGINFAIL:
+				$this->userInputFeedback = 'Wrong name or password';
+				break;
+				case LoginModel::LOGOUTSUCCESS:
+				$this->userInputFeedback = 'Bye bye!';
+			}
+		}
+
+	}
+
+	public function setRegistrationResponse($regResponse)
+	{
+
 	}
 
 	//Checks if logoutbutton is 'posted'.
@@ -137,25 +161,24 @@ class LoginView {
 
 	private function generateRegistrationButtonHTML()
 	{
-	
 			return '
 			<form  method="post">
 				<input type="submit" name="registrate" value="Register"/>
 			</form>
 		';
-
 	}
 
-	private function generateRegistrationFormHTML()
+	private function generateRegistrationFormHTML($message)
 	{
 		return '
 			<form method="post" > 
 				<input type="submit" name="backtologin" value="Back to login"/>
 					<fieldset>
 						<legend>Register a new user - Write username and password</legend>
-						<label for="regUsername">Username :</label>
+						<p id="' . self::$messageId . '">' . $message . '</p>
+						<label for="' . self::$regName . '">Username :</label>
 						<input type="text" id="' . self::$regName . '" name="' . self::$regName . '"  value=""/><br>
-						<label for="regPassword">Password :</label>
+						<label for="' . self::$regPassword . '">Password :</label>
 						<input type="password" id="' . self::$regPassword . '" name="' . self::$regPassword . '" value=""/><br>
 						<label for="checkPassword">Repeat password :</label>
 						<input type="password" id="' . self::$checkPassword . '" name="' . self::$checkPassword . '" value=""/>
@@ -190,13 +213,6 @@ class LoginView {
 				</fieldset>
 			</form>
 		';
-	}
-	
-	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
-	private function getRequestUserName() {
-		//RETURN REQUEST VARIABLE: USERNAME
-
-		//return $_POST[self::$name];
 	}
 	
 }

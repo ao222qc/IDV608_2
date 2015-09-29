@@ -29,11 +29,7 @@ class LoginController{
 
 		else if($this->logInView->RegisterFormSubmitted())
 		{
-			/*$this->logInView->regUserNameInput();
-			$this->logInView->regPasswordInput();
-			$this->logInView->checkRegPasswordInput();
-			*/
-			$this->regModel->getRegistrationFormData($this->logInView->regUserNameInput(), $this->logInView->regPasswordInput(), $this->logInView->checkRegPasswordInput());
+			$this->logInView->setUserInputResponse($this->regModel->getRegistrationFormData($this->logInView->regUserNameInput(), $this->logInView->regPasswordInput(), $this->logInView->checkRegPasswordInput()));
 		}
 	}
 
