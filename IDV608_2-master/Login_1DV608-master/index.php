@@ -6,20 +6,23 @@ require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('controller/LoginController.php');
 require_once('model/LoginModel.php');
+require_once('model/RegistrationModel.php');
 
 
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
-//error_reporting(E_ALL);
-//ini_set('display_errors', 'On');
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
 
 //CREATE OBJECTS OF THE VIEWS
 $loginModel = new LoginModel();
+$regModel = new RegistrationModel();
+
 $v = new LoginView($loginModel);
 $dtv = new DateTimeView();
 $lv = new LayoutView();
 
-$loginController = new LoginController($v, $loginModel);
+$loginController = new LoginController($v, $loginModel, $regModel);
 $loginController->checkUserAction();
 $isLoggedIn = false;
 $isLoggedIn = $loginController->checkIfLoggedIn();

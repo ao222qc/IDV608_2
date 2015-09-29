@@ -9,9 +9,11 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
+	private static $regName = 'LoginView::regName';
+	private static $regPassword = 'LoginView::regPassword';
+	private static $checkPassword = 'LoginView::checkPassword';
+	private static $submitReg = 'LoginView::submitReg';
 	private $logInModel;
-	private static $LoginMessage = 'Welcome';
-	private static $LogoutMessage = 'Bye bye!';
 	private $userInputFeedback;
 
 	public function __construct(LoginModel $logInModel)
@@ -30,14 +32,23 @@ class LoginView {
 
 		$response = '';
 
+		$response .= $this->generateRegistrationButtonHTML();
+
+		if($this->RegisterButtonPressed() || $this->RegisterFormSubmitted())
+		{
+			return $this->generateRegistrationFormHTML();
+		}
+		else
+		{	
 			if(!$this->logInModel->userLoggedIn())
 			{
-				$response = $this->generateLoginFormHTML($this->userInputFeedback);	
+				$response .= $this->generateLoginFormHTML($this->userInputFeedback);	
 			}
 			else if($this->logInModel->userLoggedIn())
 			{
 				$response .= $this->generateLogoutButtonHTML($this->userInputFeedback);
 			}
+		}
 
 		return $response;
 	}
@@ -79,11 +90,36 @@ class LoginView {
 		return  $_POST[self::$password];
 	}
 
+	public function regUserNameInput()
+	{
+		return $_POST[self::$regName];
+	}
+
+	public function regPasswordInput()
+	{
+		return $_POST[self::$regPassword];
+	}
+
+	public function checkRegPasswordInput()
+	{
+		return $_POST[self::$checkPassword];
+	}
+
 	//If the login button has been posted the user has tried to log in.
 	public function hasUserTriedLogin()
 	{
 		return isset($_POST[self::$login]);
 	}
+
+	public function RegisterButtonPressed()
+	{
+		return isset($_POST['registrate']);
+	}
+	public function RegisterFormSubmitted()
+	{
+		return isset($_POST[self::$submitReg]);
+	}
+
 
 	/**
 	* Generate HTML code on the output buffer for the logout button
@@ -95,6 +131,36 @@ class LoginView {
 			<form  method="post" >
 				<p id="' . self::$messageId . '">' . $message .'</p>
 				<input type="submit" name="' . self::$logout . '" value="logout"/>
+			</form>
+		';
+	}
+
+	private function generateRegistrationButtonHTML()
+	{
+	
+			return '
+			<form  method="post">
+				<input type="submit" name="registrate" value="Register"/>
+			</form>
+		';
+
+	}
+
+	private function generateRegistrationFormHTML()
+	{
+		return '
+			<form method="post" > 
+				<input type="submit" name="backtologin" value="Back to login"/>
+					<fieldset>
+						<legend>Register a new user - Write username and password</legend>
+						<label for="regUsername">Username :</label>
+						<input type="text" id="' . self::$regName . '" name="' . self::$regName . '"  value=""/><br>
+						<label for="regPassword">Password :</label>
+						<input type="password" id="' . self::$regPassword . '" name="' . self::$regPassword . '" value=""/><br>
+						<label for="checkPassword">Repeat password :</label>
+						<input type="password" id="' . self::$checkPassword . '" name="' . self::$checkPassword . '" value=""/>
+					</fieldset>
+					<input type="submit" id="' . self::$submitReg .'" name="' . self::$submitReg .'" value="Submit"/>
 			</form>
 		';
 	}
