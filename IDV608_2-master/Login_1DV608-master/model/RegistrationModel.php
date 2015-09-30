@@ -39,7 +39,6 @@ class RegistrationModel{
 
 	public function getRegistrationFormData($name, $password, $repeatedPassword)
 	{
-
 		$this->userNameInput = $name;
 		$this->passwordInput = $password;
 		$this->repeatedPassword = $repeatedPassword;
@@ -47,7 +46,11 @@ class RegistrationModel{
 		$result = $this->validateRegistrationFormData();
 			if($result != self::regSuccess)
 				return $result;
-
 	}
+
+/*	$mysql_host = "mysql1.000webhost.com";
+	$mysql_database = "a5510317_1dv608";
+	$mysql_user = "a5510317_ao222qc";
+	$mysql_password = "ao222qc";	*/
 
 }
