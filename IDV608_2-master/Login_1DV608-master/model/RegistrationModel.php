@@ -1,56 +1,39 @@
 <?php
 
+require_once('User.php');
 
 class RegistrationModel{
 
-	private $userNameInput;
-	private $passwordInput;
-	private $repeatedPasswordInput;
+	private $userName;
+	private $password;
+	private $USER;
+	private $userDAL;
 
-	const regFail = 1;
-	const uNameFail = 2;
-	const pWordFail = 3;
-	const repeatedPWordFail = 4;
-	const regSuccess = 5;
 
-	
 	public function __construct()
 	{
-		//someshit
+		$this->userDAL = new UserDAL();
 	}
 
-	public function validateRegistrationFormData()
-	{	
-		if(is_numeric($this->userNameInput) || strlen($this->userNameInput) < 4 || $this->userNameInput == NULL && $this->passwordInput == NULL)
-		{
-			return self::uNameFail;
-		}
-		else if(strlen($this->passwordInput) < 7)
-		{
-			return self::pWordFail;
-		}
-		else if($this->repeatedPasswordInput !== $this->passwordInput)
-		{
-			return self::repeatedPWordFail;
-		}
 
-		return self::regSuccess;
-	}
-
-	public function getRegistrationFormData($name, $password, $repeatedPassword)
+	public function tryRegister(UserCredentials $uc, &$user)
 	{
-		$this->userNameInput = $name;
-		$this->passwordInput = $password;
-		$this->repeatedPassword = $repeatedPassword;
 
-		$result = $this->validateRegistrationFormData();
-			if($result != self::regSuccess)
-				return $result;
+		$this->userName = $uc->getUserName();
+		$this->password = $uc->getPassword();
+
+		$user = new User($this->userName, $this->password);
+
+		if(!$this->userDAL->checkIfUserExists($this->userName))
+		{
+			$this->userDAL->addUser($user);
+			return true;
+		}
 	}
 
-/*	$mysql_host = "mysql1.000webhost.com";
-	$mysql_database = "a5510317_1dv608";
-	$mysql_user = "a5510317_ao222qc";
-	$mysql_password = "ao222qc";	*/
+	public function IsSame()
+	{
+
+	}
 
 }

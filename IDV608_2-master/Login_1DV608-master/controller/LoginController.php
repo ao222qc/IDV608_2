@@ -4,14 +4,18 @@ class LoginController{
 
 	private $logInView;
 	private $logInModel;
+	private $userCredentials;
 	private $regModel;
+	private $userDAL;
 
 	//Constructor initiates object of LoginView 'n' model
-	public function __construct(LoginView $logInView, LoginModel $logInModel, RegistrationModel $regModel){
+	public function __construct(LoginView $logInView, LoginModel $logInModel, UserCredentials $uc, RegistrationModel $regModel, UserDAL $userDAL){
 
 		$this->logInView = $logInView;
 		$this->logInModel = $logInModel;
+		$this->userCredentials = $uc;
 		$this->regModel = $regModel;
+		$this->userDAL = $userDAL;
 
 	}
 
@@ -29,7 +33,18 @@ class LoginController{
 
 		else if($this->logInView->RegisterFormSubmitted())
 		{
-			$this->logInView->setUserInputResponse($this->regModel->getRegistrationFormData($this->logInView->regUserNameInput(), $this->logInView->regPasswordInput(), $this->logInView->checkRegPasswordInput()));
+			$result = $this->userCredentials->getRegistrationFormData($this->logInView->regUserNameInput(), $this->logInView->regPasswordInput(), $this->logInView->checkRegPasswordInput());
+			if($result == UserCredentials::regSuccess)
+			{
+				$user = null;
+				if ($this->regModel->tryRegister($this->userCredentials,$user))
+				{
+					
+					//$this->userDAL->addUser($user);
+
+				}
+			}
+			$this->logInView->setUserInputResponse($result);
 		}
 	}
 

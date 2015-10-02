@@ -60,14 +60,15 @@ class LoginView {
 		{
 			switch($userInputFeedback)
 			{
-				case RegistrationModel::uNameFail:
+				case UserCredentials::uNameFail:
 				$this->userInputFeedback = 'Username has too few characters, at least 3 characters. Password has too few characters, at least 6 characters.';
 				break;
-				case RegistrationModel::pWordFail:
+				case UserCredentials::pWordFail:
 				$this->userInputFeedback = 'Password has too few characters, at least 6 characters.';
 				break;
-
-
+				case UserCredentials::repeatedPWordFail:
+				$this->userInputFeedback = "Passwords do not match.";
+				break;
 			}
 		}
 		else

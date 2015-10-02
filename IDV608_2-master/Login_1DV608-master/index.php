@@ -7,6 +7,9 @@ require_once('view/LayoutView.php');
 require_once('controller/LoginController.php');
 require_once('model/LoginModel.php');
 require_once('model/RegistrationModel.php');
+require_once('model/UserCredentials.php');
+require_once('model/User.php');
+require_once('model/UserDAL.php');
 
 
 
@@ -17,15 +20,20 @@ ini_set('display_errors', 'On');
 //CREATE OBJECTS OF THE VIEWS
 $loginModel = new LoginModel();
 $regModel = new RegistrationModel();
+$uc = new UserCredentials();
+$userDAL = new UserDAL();
+
 
 $v = new LoginView($loginModel);
 $dtv = new DateTimeView();
 $lv = new LayoutView();
 
-$loginController = new LoginController($v, $loginModel, $regModel);
+$loginController = new LoginController($v, $loginModel, $uc, $regModel, $userDAL);
 $loginController->checkUserAction();
 $isLoggedIn = false;
 $isLoggedIn = $loginController->checkIfLoggedIn();
+
+
 
 
 
