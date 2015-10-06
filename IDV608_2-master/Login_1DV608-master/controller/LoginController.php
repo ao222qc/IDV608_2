@@ -16,7 +16,6 @@ class LoginController{
 		$this->userCredentials = $uc;
 		$this->regModel = $regModel;
 		$this->userDAL = $userDAL;
-
 	}
 
 	public function checkUserAction(){
@@ -39,9 +38,7 @@ class LoginController{
 				$user = null;
 				if ($this->regModel->tryRegister($this->userCredentials,$user))
 				{
-					
-					//$this->userDAL->addUser($user);
-
+					//maybe send something to view here
 				}
 			}
 			$this->logInView->setUserInputResponse($result);

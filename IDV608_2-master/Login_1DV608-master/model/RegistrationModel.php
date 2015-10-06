@@ -6,14 +6,6 @@ class RegistrationModel{
 
 	private $userName;
 	private $password;
-	private $USER;
-	private $userDAL;
-
-
-	public function __construct()
-	{
-		$this->userDAL = new UserDAL();
-	}
 
 
 	public function tryRegister(UserCredentials $uc, &$user)
@@ -24,16 +16,10 @@ class RegistrationModel{
 
 		$user = new User($this->userName, $this->password);
 
-		if(!$this->userDAL->checkIfUserExists($this->userName))
+		if(!User::checkIfUserExists($this->userName))
 		{
-			$this->userDAL->addUser($user);
+			User::AddUser($user);
 			return true;
 		}
 	}
-
-	public function IsSame()
-	{
-
-	}
-
 }

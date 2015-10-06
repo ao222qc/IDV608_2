@@ -6,19 +6,23 @@ class User{
 
 	private $name;
 	private $passwordHash;
-	private $userDAL;
+	private static $userDAL;
 	
-	public function __construct($name, $password)
+	public static function Initialize()
 	{
-		$this->userDAL = new UserDAL();
-
-		$this->name = $name;
-		$this->passwordHash = $this->hash($password);
+		self::$userDAL = new UserDAL();
 	}
 
-	public function checkIfUserExists()
+	public function __construct($name, $password = null)
 	{
-		return $this->userDAL->checkIfUserExists($this->name);
+		$this->name = $name;
+		if ($password != null)
+			$this->passwordHash = $this->hash($password);
+	}
+
+	public static function checkIfUserExists($name)
+	{
+		return self::$userDAL->checkIfUserExistsInDataBase($name);
 	}
 
 	public function getUsername()
@@ -36,10 +40,32 @@ class User{
 		return $this->hash($password) == $this->passwordHash;
 	}
 
+	public function setPasswordHash($hash)
+	{
+		$this->passwordHash = $hash;
+	}
+
 	private function hash($string)
 	{
 		$name = $this->name;
 		return sha1("secretsaltyo$name$string$name");
+	}
+
+	public static function AddUser(User $user)
+	{
+		self::$userDAL->addUser($user);
+	}
+
+	public static function Get($uname)
+	{
+		$data = self::$userDAL->getUserData($uname);
+
+		if ($data == null)
+			return null;
+
+		$user = new User($data['username']);
+		$user->setPasswordHash($data['password']);
+		return $user;
 	}
 
 }

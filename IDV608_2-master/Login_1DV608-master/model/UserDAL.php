@@ -48,7 +48,7 @@ class UserDAL{
 		mysqli_query($this->conn, "INSERT INTO member (Username, Password) VALUES ('$username', '$password')");
 	}
 
-	public function checkIfUserExists($username)
+	public function checkIfUserExistsInDataBase($username)
 	{
 		$username = mysqli_escape_string($this->conn,$username);
 
@@ -59,6 +59,19 @@ class UserDAL{
 		$row = $result->fetch_array(MYSQLI_ASSOC);
 
 		return isset($row);
+	}
+
+	public function getUserData($username)
+	{
+		$username = mysqli_escape_string($this->conn,$username);
+
+		$query = "SELECT Username,Password FROM member WHERE Username = '$username'";
+
+		$result = $this->conn->query($query);
+
+		$row = $result->fetch_array(MYSQLI_ASSOC);
+
+		return isset($row) ? array("username" => $row['Username'],"password" => $row['Password']) : null;
 	}
 }
 

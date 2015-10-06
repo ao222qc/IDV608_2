@@ -1,12 +1,12 @@
 <?php
 Session_start();
 
+require_once("User.php");
+
 class LoginModel {
 
 	private $suppliedUserName;
 	private $suppliedPassword;
-	private static $correctUserName = 'Admin';
-	private static $correctPassword = 'password';
 	private static $userLoginSession = "userLoginSession";
 	const UNAMEFAIL = 1;
 	const PWORDFAIL = 2;
@@ -40,20 +40,23 @@ class LoginModel {
 		if ($valid != self::SUCCESS)
 			return $valid;
 
-		if($this->suppliedUserName == self::$correctUserName && $this->suppliedPassword == self::$correctPassword)
-		{
+		$user = User::Get($this->suppliedUserName);
 
-			if(!isset($_SESSION[self::$userLoginSession]))
+		if ($user != NULL)
+		{
+			if ($user->comparePassword($this->suppliedPassword))
 			{
-				$_SESSION[self::$userLoginSession] = true;	
-				return self::LOGINSUCCESS;
+				if(!isset($_SESSION[self::$userLoginSession]))
+				{
+					$_SESSION[self::$userLoginSession] = true;	
+					return self::LOGINSUCCESS;
+				}
 			}
-
+			else
+				return self::LOGINFAIL;
 		}
-		else if($this->suppliedUserName != self::$correctUserName || $this->suppliedPassword != self::$correctPassword)
-		{
-			return self::LOGINFAIL;
-		}
+		else
+			echo 'you don exist, yo';
 	}
 
 	//function returns a bool if user is logged in.

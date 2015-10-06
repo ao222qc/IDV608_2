@@ -69,6 +69,11 @@ class LoginView {
 				case UserCredentials::repeatedPWordFail:
 				$this->userInputFeedback = "Passwords do not match.";
 				break;
+				case UserCredentials::uNameExistsFail:
+				$this->userInputFeedback = "User exists, pick another username.";
+				break;
+				case UserCredentials::invalidCharFail:
+				$this->userInputFeedback =  "Username contains invalid characters.";
 			}
 		}
 		else
@@ -91,15 +96,8 @@ class LoginView {
 				$this->userInputFeedback = 'Bye bye!';
 			}
 		}
-
 	}
 
-	public function setRegistrationResponse($regResponse)
-	{
-
-	}
-
-	//Checks if logoutbutton is 'posted'.
 	public function hasUserLoggedOut()
 	{
 		return isset($_POST[self::$logout]);
@@ -130,7 +128,6 @@ class LoginView {
 		return $_POST[self::$checkPassword];
 	}
 
-	//If the login button has been posted the user has tried to log in.
 	public function hasUserTriedLogin()
 	{
 		return isset($_POST[self::$login]);
