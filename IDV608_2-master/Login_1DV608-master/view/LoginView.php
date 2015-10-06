@@ -74,6 +74,8 @@ class LoginView {
 				break;
 				case UserCredentials::invalidCharFail:
 				$this->userInputFeedback =  "Username contains invalid characters.";
+				case 'Success':
+				$this->userInputFeedback = "Registered new user.";
 			}
 		}
 		else

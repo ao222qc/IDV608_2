@@ -20,11 +20,6 @@ class User{
 			$this->passwordHash = $this->hash($password);
 	}
 
-	public static function checkIfUserExists($name)
-	{
-		return self::$userDAL->checkIfUserExistsInDataBase($name);
-	}
-
 	public function getUsername()
 	{
 		return $this->name;
@@ -33,6 +28,11 @@ class User{
 	public function getPasswordHash()
 	{
 		return $this->passwordHash;
+	}
+
+	public static function checkIfUserExists($name)
+	{
+		return self::$userDAL->checkIfUserExistsInDataBase($name);
 	}
 
 	public function comparePassword($password)

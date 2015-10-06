@@ -6,16 +6,15 @@ class LoginController{
 	private $logInModel;
 	private $userCredentials;
 	private $regModel;
-	private $userDAL;
+
 
 	//Constructor initiates object of LoginView 'n' model
-	public function __construct(LoginView $logInView, LoginModel $logInModel, UserCredentials $uc, RegistrationModel $regModel, UserDAL $userDAL){
+	public function __construct(LoginView $logInView, LoginModel $logInModel, UserCredentials $uc, RegistrationModel $regModel){
 
 		$this->logInView = $logInView;
 		$this->logInModel = $logInModel;
 		$this->userCredentials = $uc;
 		$this->regModel = $regModel;
-		$this->userDAL = $userDAL;
 	}
 
 	public function checkUserAction(){

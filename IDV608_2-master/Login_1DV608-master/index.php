@@ -21,15 +21,16 @@ ini_set('display_errors', 'On');
 $loginModel = new LoginModel();
 $regModel = new RegistrationModel();
 $uc = new UserCredentials();
-$userDAL = new UserDAL();
+
 
 
 $v = new LoginView($loginModel);
 $dtv = new DateTimeView();
 $lv = new LayoutView();
+
 User::Initialize();
 
-$loginController = new LoginController($v, $loginModel, $uc, $regModel, $userDAL);
+$loginController = new LoginController($v, $loginModel, $uc, $regModel);
 $loginController->checkUserAction();
 $isLoggedIn = false;
 $isLoggedIn = $loginController->checkIfLoggedIn();
