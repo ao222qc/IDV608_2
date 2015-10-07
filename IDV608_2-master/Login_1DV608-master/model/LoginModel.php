@@ -8,12 +8,6 @@ class LoginModel {
 	private $suppliedUserName;
 	private $suppliedPassword;
 	private static $userLoginSession = "userLoginSession";
-	const UNAMEFAIL = 1;
-	const PWORDFAIL = 2;
-	const LOGINSUCCESS = 3;
-	const LOGINFAIL = 4;
-	const LOGOUTSUCCESS = 5;
-	const SUCCESS = 6;
 
 	public function checkIfUserSuppliedInput($name, $password){
 
@@ -23,21 +17,21 @@ class LoginModel {
 
 		if($this->suppliedUserName == NULL && $this->suppliedPassword == NULL || $this->suppliedUserName == NULL)
 		{
-			return self::UNAMEFAIL;
+			return FeedbackStrings::UNAMEFAIL;
 		}
 		else if($this->suppliedPassword == NULL)
 		{
-			return self::PWORDFAIL;
+			return FeedbackStrings::PWORDFAIL;
 		}
 
-		return self::SUCCESS;
+		return FeedbackStrings::LOGINSUCCESS;
 	}
 
 	public function tryLoginUser($suppliedUserName, $suppliedPassword)
 	{
 		$valid = $this->checkIfUserSuppliedInput($suppliedUserName,$suppliedPassword);
 
-		if ($valid != self::SUCCESS)
+		if ($valid != FeedbackStrings::LOGINSUCCESS)
 			return $valid;
 
 		$user = User::Get($this->suppliedUserName);
@@ -49,14 +43,14 @@ class LoginModel {
 				if(!isset($_SESSION[self::$userLoginSession]))
 				{
 					$_SESSION[self::$userLoginSession] = true;	
-					return self::LOGINSUCCESS;
+					return FeedbackStrings::LOGINSUCCESS;
 				}
 			}
-			else
-				return self::LOGINFAIL;
 		}
 		else
-			echo 'you don exist, yo';
+		{
+			return FeedbackStrings::LOGINFAIL;
+		}
 	}
 
 	//function returns a bool if user is logged in.
@@ -70,7 +64,7 @@ class LoginModel {
 		if(isset($_SESSION[self::$userLoginSession]))
 		{
 			unset($_SESSION[self::$userLoginSession]);
-			return self::LOGOUTSUCCESS;
+			return FeedbackStrings::LOGOUTSUCCESS;
 		}
 	}	
 }

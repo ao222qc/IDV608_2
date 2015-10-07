@@ -55,49 +55,7 @@ class LoginView {
 
 	public function setUserInputResponse($userInputFeedback)
 	{	
-
-		if($this->RegisterButtonPressed() || $this->RegisterFormSubmitted())
-		{
-			switch($userInputFeedback)
-			{
-				case UserCredentials::uNameFail:
-				$this->userInputFeedback = 'Username has too few characters, at least 3 characters. Password has too few characters, at least 6 characters.';
-				break;
-				case UserCredentials::pWordFail:
-				$this->userInputFeedback = 'Password has too few characters, at least 6 characters.';
-				break;
-				case UserCredentials::repeatedPWordFail:
-				$this->userInputFeedback = "Passwords do not match.";
-				break;
-				case UserCredentials::uNameExistsFail:
-				$this->userInputFeedback = "User exists, pick another username.";
-				break;
-				case UserCredentials::invalidCharFail:
-				$this->userInputFeedback =  "Username contains invalid characters.";
-				case 'Success':
-				$this->userInputFeedback = "Registered new user.";
-			}
-		}
-		else
-		{
-			switch ($userInputFeedback)
-			{
-				case LoginModel::UNAMEFAIL:
-				$this->userInputFeedback = 'Username is missing';
-				break;
-				case LoginModel::PWORDFAIL:
-				$this->userInputFeedback = 'Password is missing';
-				break;
-				case LoginModel::LOGINSUCCESS:
-				$this->userInputFeedback = 'Welcome';
-				break;
-				case LoginModel::LOGINFAIL:
-				$this->userInputFeedback = 'Wrong name or password';
-				break;
-				case LoginModel::LOGOUTSUCCESS:
-				$this->userInputFeedback = 'Bye bye!';
-			}
-		}
+		$this->userInputFeedback = $userInputFeedback;
 	}
 
 	public function hasUserLoggedOut()

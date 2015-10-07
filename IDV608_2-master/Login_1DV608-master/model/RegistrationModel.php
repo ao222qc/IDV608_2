@@ -19,7 +19,7 @@ class RegistrationModel{
 		if(!User::checkIfUserExists($this->userName))
 		{
 			User::AddUser($user);
-			return true;
+			return FeedbackStrings::REGISTRATIONSUCCESS;
 		}
 	}
 }

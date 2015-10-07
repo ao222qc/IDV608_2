@@ -5,15 +5,6 @@ class UserCredentials{
 	private $userNameInput;
 	private $passwordInput;
 	private $repeatedPasswordInput;
-
-	const regFail = 1;
-	const uNameFail = 2;
-	const pWordFail = 3;
-	const repeatedPWordFail = 4;
-	const uNameExistsFail = 5;
-	const invalidCharFail = 6;
-	const regSuccess = 7;
-
 	
 	public function __construct()
 	{
@@ -27,37 +18,33 @@ class UserCredentials{
 		$this->repeatedPasswordInput = $repeatedPassword;
 
 		$result = $this->validateRegistrationFormData();
-
-		if($result != self::regSuccess)
-			return $result;	
-
-			return self::regSuccess;
+		
+		return $result;		
 	}
 
 	public function validateRegistrationFormData()
 	{
 		if(is_numeric($this->userNameInput) || strlen($this->userNameInput) < 4 || $this->userNameInput == NULL && $this->passwordInput == NULL)
 		{
-			return self::uNameFail;
+			return FeedbackStrings::UNAMEFAIL;
 		}
 		else if(strlen($this->passwordInput) < 6)
 		{
-			return self::pWordFail;
+			return FeedbackStrings::PWORDFAIL;
 		}
 		else if($this->repeatedPasswordInput != $this->passwordInput)
 		{
-			return self::repeatedPWordFail;
+			return FeedbackStrings::REPEATPASSWORDFAIL;
 		}
 		else if(preg_match('/[^A-Za-z0-9.#\\-$]/', $this->userNameInput))
 		{
-			return self::invalidCharFail;
+			return FeedbackStrings::INVALIDCHARFAIL;
 		}
 		else if(User::checkIfUserExists($this->userNameInput))
 		{
-			return self::uNameExistsFail;
+			return FeedbackStrings::UNAMEEXISTSFAIL;
 		}
-
-		return self::regSuccess;
+		return FeedbackStrings::REGISTRATIONSUCCESS;
 	}
 
 	public function getUserName()

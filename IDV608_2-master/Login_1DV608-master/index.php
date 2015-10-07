@@ -10,6 +10,7 @@ require_once('model/RegistrationModel.php');
 require_once('model/UserCredentials.php');
 require_once('model/User.php');
 require_once('model/UserDAL.php');
+require_once('FeedbackStrings.php');
 
 
 
@@ -17,11 +18,14 @@ require_once('model/UserDAL.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
+FeedbackStrings::LoadLanguageFile("eng.ini.txt");
+
 //CREATE OBJECTS OF THE VIEWS
 $loginModel = new LoginModel();
 $regModel = new RegistrationModel();
 $uc = new UserCredentials();
 
+//$hej = FeedbackStrings::Get(FeedbackStrings::SECTION_LOGIN, "login_success");
 
 
 $v = new LoginView($loginModel);
@@ -38,7 +42,7 @@ $isLoggedIn = $loginController->checkIfLoggedIn();
 
 $lv->render($isLoggedIn, $v, $dtv);
 
-
+//TODO: Settingsfil för databas!!!!
 
 //http://ao222qc.web44.net/Login_1DV608-master/
 //Link to published version.

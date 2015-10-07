@@ -6,6 +6,8 @@ class LoginController{
 	private $logInModel;
 	private $userCredentials;
 	private $regModel;
+	private $validationResultID;
+	private $responseSection;
 
 
 	//Constructor initiates object of LoginView 'n' model
@@ -21,31 +23,36 @@ class LoginController{
 	
 		if($this->logInView->hasUserTriedLogin())
 		{	
-			$this->logInView->setUserInputResponse($this->logInModel->tryLoginUser($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput()));							 
+			$this->validationResultID = $this->logInModel->tryLoginUser($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput());
+			$this->responseSection = FeedbackStrings::SECTION_LOGIN;
 		}
 
 		else if($this->logInView->hasUserLoggedOut())
 		{
-			$this->logInView->setUserInputResponse($this->logInModel->userLoggedOut());
+			$this->validationResultID = $this->logInModel->userLoggedOut();
+			$this->responseSection = FeedbackStrings::SECTION_LOGIN;
 		} 	
 
 		else if($this->logInView->RegisterFormSubmitted())
 		{
-			$result = $this->userCredentials->getRegistrationFormData($this->logInView->regUserNameInput(), $this->logInView->regPasswordInput(), $this->logInView->checkRegPasswordInput());
-			if($result == UserCredentials::regSuccess)
+			//will return a value in a constant from FeedbackStrings if validation fails, otherwise returns true
+			$this->validationResultID = $this->userCredentials->getRegistrationFormData($this->logInView->regUserNameInput(), $this->logInView->regPasswordInput(), $this->logInView->checkRegPasswordInput());
+
+			if ($this->validationResultID == true)
 			{
 				$user = null;
-				if ($this->regModel->tryRegister($this->userCredentials,$user))
+				$this->validationResultID = $this->regModel->tryRegister($this->userCredentials,$user);
+				$this->responseSection = FeedbackStrings::SECTION_REGISTER;
+
+				if ($regResult == FeedbackStrings::REGISTRATIONSUCCESS)
 				{
-					//maybe send something to view here
+					$this->logInView->setUserInputResponse(FeedbackStrings::Get($this->responseSection, $this->validationResultID));
 				}
 			}
-			$this->logInView->setUserInputResponse($result);
 		}
+		$this->logInView->setUserInputResponse(FeedbackStrings::Get($this->responseSection, $this->validationResultID));
 	}
 
-	//calls function that returns true/false wether the user has entered the correct credentials, returns this value to the index file (bool in render)
-	//Value returned by function is stored in a session variable.
 	public function checkIfLoggedIn(){
 
 		return $this->logInModel->userLoggedIn();
