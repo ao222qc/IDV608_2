@@ -7,10 +7,8 @@ class RegistrationModel{
 	private $userName;
 	private $password;
 
-
 	public function tryRegister(UserCredentials $uc, &$user)
 	{
-
 		$this->userName = $uc->getUserName();
 		$this->password = $uc->getPassword();
 
@@ -19,7 +17,11 @@ class RegistrationModel{
 		if(!User::checkIfUserExists($this->userName))
 		{
 			User::AddUser($user);
-			return FeedbackStrings::REGISTRATIONSUCCESS;
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 }

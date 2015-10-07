@@ -3,7 +3,7 @@ username_missing = "Username is missing"
 password_missing = "Password is missing"
 login_success = "Welcome"
 login_fail = "Wrong name or password"
-logout_success = "Bye bye"
+logout_success = "Bye bye!"
 
 [register]
 username_missing = "Username has too few characters, at least 3 characters. Password has too few characters, at least 6 characters."

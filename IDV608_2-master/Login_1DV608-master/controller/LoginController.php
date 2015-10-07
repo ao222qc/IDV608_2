@@ -6,11 +6,7 @@ class LoginController{
 	private $logInModel;
 	private $userCredentials;
 	private $regModel;
-	private $validationResultID;
-	private $responseSection;
 
-
-	//Constructor initiates object of LoginView 'n' model
 	public function __construct(LoginView $logInView, LoginModel $logInModel, UserCredentials $uc, RegistrationModel $regModel){
 
 		$this->logInView = $logInView;
@@ -23,34 +19,32 @@ class LoginController{
 	
 		if($this->logInView->hasUserTriedLogin())
 		{	
-			$this->validationResultID = $this->logInModel->tryLoginUser($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput());
-			$this->responseSection = FeedbackStrings::SECTION_LOGIN;
+			$this->logInView->setUserInputResponse($this->logInModel->tryLoginUser($this->logInView->userNameLoginInput(), $this->logInView->userPasswordLoginInput()));
 		}
 
 		else if($this->logInView->hasUserLoggedOut())
 		{
-			$this->validationResultID = $this->logInModel->userLoggedOut();
-			$this->responseSection = FeedbackStrings::SECTION_LOGIN;
+			$this->logInView->setUserInputResponse($this->logInModel->userLoggedOut());
 		} 	
 
 		else if($this->logInView->RegisterFormSubmitted())
 		{
-			//will return a value in a constant from FeedbackStrings if validation fails, otherwise returns true
-			$this->validationResultID = $this->userCredentials->getRegistrationFormData($this->logInView->regUserNameInput(), $this->logInView->regPasswordInput(), $this->logInView->checkRegPasswordInput());
 
-			if ($this->validationResultID == true)
+			$validationResult = $this->userCredentials->getRegistrationFormData($this->logInView->regUserNameInput(), $this->logInView->regPasswordInput(), $this->logInView->checkRegPasswordInput());
+
+			if ($validationResult == TRUE)
 			{
 				$user = null;
-				$this->validationResultID = $this->regModel->tryRegister($this->userCredentials,$user);
-				$this->responseSection = FeedbackStrings::SECTION_REGISTER;
 
-				if ($regResult == FeedbackStrings::REGISTRATIONSUCCESS)
-				{
-					$this->logInView->setUserInputResponse(FeedbackStrings::Get($this->responseSection, $this->validationResultID));
-				}
+				$registerResult = $this->regModel->tryRegister($this->userCredentials, $user);
+
+				$this->logInView->setUserInputResponse($registerResult);
 			}
+			else
+			{
+				$this->logInView->setUserInputResponse($validationResult);	
+			}		
 		}
-		$this->logInView->setUserInputResponse(FeedbackStrings::Get($this->responseSection, $this->validationResultID));
 	}
 
 	public function checkIfLoggedIn(){

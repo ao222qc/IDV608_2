@@ -11,8 +11,7 @@ require_once('model/UserCredentials.php');
 require_once('model/User.php');
 require_once('model/UserDAL.php');
 require_once('FeedbackStrings.php');
-
-
+require_once('Settings.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);
@@ -25,10 +24,7 @@ $loginModel = new LoginModel();
 $regModel = new RegistrationModel();
 $uc = new UserCredentials();
 
-//$hej = FeedbackStrings::Get(FeedbackStrings::SECTION_LOGIN, "login_success");
-
-
-$v = new LoginView($loginModel);
+$v = new LoginView($loginModel, $uc);
 $dtv = new DateTimeView();
 $lv = new LayoutView();
 
@@ -41,8 +37,6 @@ $isLoggedIn = $loginController->checkIfLoggedIn();
 
 
 $lv->render($isLoggedIn, $v, $dtv);
-
-//TODO: Settingsfil för databas!!!!
 
 //http://ao222qc.web44.net/Login_1DV608-master/
 //Link to published version.

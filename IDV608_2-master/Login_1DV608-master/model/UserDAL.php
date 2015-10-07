@@ -17,17 +17,17 @@ class UserDAL{
 
 	public function createConnection()
 	{
+		$mysql_host = Settings::mysql_host;
+		$mysql_user = Settings::mysql_user;
+		$mysql_password = Settings::mysql_password;	
+		$mysql_localDatabase = Settings::mysql_database;
+
 		/*$mysql_host = "mysql1.000webhost.com";
 		$mysql_database = "a5510317_1dv608";
 		$mysql_user = "a5510317_ao222qc";
 		$mysql_password = "ao222qc";
 		$mysql_user = "a5510317_ao222qc";
-		$mysql_database = "a5510317_1dv608";*/
-
-		$mysql_host = "localhost";
-		$mysql_user = "ao222qc";
-		$mysql_password = "ao222qc";	
-		$mysql_localDatabase = "register";
+		$mysql_database = "a5510317_1dv608";*/	
 
 		$this->conn = new mysqli($mysql_host, $mysql_user, $mysql_password, $mysql_localDatabase);
 

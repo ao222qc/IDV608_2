@@ -14,11 +14,15 @@ class LoginView {
 	private static $checkPassword = 'LoginView::checkPassword';
 	private static $submitReg = 'LoginView::submitReg';
 	private $logInModel;
+	private $userCredentials;
 	private $userInputFeedback;
+	private $inputSection;
 
-	public function __construct(LoginModel $logInModel)
+	public function __construct(LoginModel $logInModel, UserCredentials $uc)
 	{
 		$this->logInModel = $logInModel;
+		$this->userCredentials = $uc;
+		$this->inputSection = FeedbackStrings::SECTION_LOGIN;
 	}
 
 	/**
@@ -36,6 +40,7 @@ class LoginView {
 
 		if($this->RegisterButtonPressed() || $this->RegisterFormSubmitted())
 		{
+
 			return $this->generateRegistrationFormHTML($this->userInputFeedback);
 		}
 		else
@@ -52,11 +57,35 @@ class LoginView {
 
 		return $response;
 	}
-
-	public function setUserInputResponse($userInputFeedback)
+	//gets bool as argument, from model->controller
+	public function setUserInputResponse($dataValidationResult)
 	{	
-		$this->userInputFeedback = $userInputFeedback;
-	}
+		$key = '';
+
+			switch($this->inputSection)
+			{
+				
+				case FeedbackStrings::SECTION_LOGIN:
+				$key = $this->logInModel->getMessageKey();
+				$this->userInputFeedback = FeedbackStrings::Get($this->inputSection, $key);
+				break;
+
+				case FeedbackStrings::SECTION_REGISTER:
+					switch($dataValidationResult)
+					{
+						case true:
+						$this->userInputFeedback = "Registered new user.";
+						break;
+
+						case false:
+						$key = $this->userCredentials->getMessageKey();
+						$this->userInputFeedback = FeedbackStrings::Get($this->inputSection, $key);
+						break;
+					}
+				break;
+				
+			}
+	}	
 
 	public function hasUserLoggedOut()
 	{
@@ -95,13 +124,20 @@ class LoginView {
 
 	public function RegisterButtonPressed()
 	{
-		return isset($_POST['registrate']);
+		if(isset($_POST['registrate']))
+		{
+			$this->inputSection = FeedbackStrings::SECTION_REGISTER;
+			return true;
+		}
 	}
 	public function RegisterFormSubmitted()
 	{
-		return isset($_POST[self::$submitReg]);
+		if(isset($_POST[self::$submitReg]))
+		{
+			$this->inputSection = FeedbackStrings::SECTION_REGISTER;
+			return true;
+		}		
 	}
-
 
 	/**
 	* Generate HTML code on the output buffer for the logout button

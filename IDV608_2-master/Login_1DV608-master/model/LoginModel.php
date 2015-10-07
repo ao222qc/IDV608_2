@@ -8,6 +8,8 @@ class LoginModel {
 	private $suppliedUserName;
 	private $suppliedPassword;
 	private static $userLoginSession = "userLoginSession";
+	private $messageKey;
+
 
 	public function checkIfUserSuppliedInput($name, $password){
 
@@ -17,40 +19,53 @@ class LoginModel {
 
 		if($this->suppliedUserName == NULL && $this->suppliedPassword == NULL || $this->suppliedUserName == NULL)
 		{
-			return FeedbackStrings::UNAMEFAIL;
+			$this->messageKey = FeedbackStrings::UNAMEFAIL;
 		}
 		else if($this->suppliedPassword == NULL)
 		{
-			return FeedbackStrings::PWORDFAIL;
+			$this->messageKey = FeedbackStrings::PWORDFAIL;
 		}
-
-		return FeedbackStrings::LOGINSUCCESS;
+		else
+		{
+			return true;
+		}
 	}
 
 	public function tryLoginUser($suppliedUserName, $suppliedPassword)
 	{
 		$valid = $this->checkIfUserSuppliedInput($suppliedUserName,$suppliedPassword);
 
-		if ($valid != FeedbackStrings::LOGINSUCCESS)
+		if($valid != true)
+		{	
+			$valid = false;
 			return $valid;
-
+		}
 		$user = User::Get($this->suppliedUserName);
 
 		if ($user != NULL)
 		{
 			if ($user->comparePassword($this->suppliedPassword))
-			{
+			{		
 				if(!isset($_SESSION[self::$userLoginSession]))
 				{
+					$valid = true;
 					$_SESSION[self::$userLoginSession] = true;	
-					return FeedbackStrings::LOGINSUCCESS;
+					$this->messageKey = FeedbackStrings::LOGINSUCCESS;
 				}
 			}
 		}
 		else
 		{
-			return FeedbackStrings::LOGINFAIL;
+			$this->messageKey = FeedbackStrings::LOGINFAIL;
+			$valid = false;
 		}
+		
+		return $valid;
+	}
+
+	public function getMessageKey()
+	{
+		return $this->messageKey;
 	}
 
 	//function returns a bool if user is logged in.
@@ -64,7 +79,8 @@ class LoginModel {
 		if(isset($_SESSION[self::$userLoginSession]))
 		{
 			unset($_SESSION[self::$userLoginSession]);
-			return FeedbackStrings::LOGOUTSUCCESS;
+			$this->messageKey = FeedbackStrings::LOGOUTSUCCESS;
+			return true;
 		}
 	}	
 }
