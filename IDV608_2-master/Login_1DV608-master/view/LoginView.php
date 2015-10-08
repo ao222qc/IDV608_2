@@ -17,12 +17,15 @@ class LoginView {
 	private $userCredentials;
 	private $userInputFeedback;
 	private $inputSection;
+	private $regModel;
+	private $keepName;
 
-	public function __construct(LoginModel $logInModel, UserCredentials $uc)
+	public function __construct(LoginModel $logInModel, UserCredentials $uc, RegistrationModel $regModel)
 	{
 		$this->logInModel = $logInModel;
 		$this->userCredentials = $uc;
 		$this->inputSection = FeedbackStrings::SECTION_LOGIN;
+		$this->regModel = $regModel;
 	}
 
 	/**
@@ -38,43 +41,50 @@ class LoginView {
 
 		$response .= $this->generateRegistrationButtonHTML();
 
-		if($this->RegisterButtonPressed() || $this->RegisterFormSubmitted())
+		if($this->regModel->wasRegistrationSuccessful())
 		{
-
-			return $this->generateRegistrationFormHTML($this->userInputFeedback);
-		}
-		else
-		{	
-			if(!$this->logInModel->userLoggedIn())
-			{
-				$response .= $this->generateLoginFormHTML($this->userInputFeedback);	
-			}
-			else if($this->logInModel->userLoggedIn())
-			{
-				$response .= $this->generateLogoutButtonHTML($this->userInputFeedback);
-			}
+			return $this->generateLoginFormHTML($this->userInputFeedback);
 		}
 
-		return $response;
-	}
+			if($this->RegisterButtonPressed() || $this->RegisterFormSubmitted())
+			{
+				return $this->generateRegistrationFormHTML($this->userInputFeedback);
+			}
+			else
+			{	
+				if(!$this->logInModel->userLoggedIn())
+				{
+					$response .= $this->generateLoginFormHTML($this->userInputFeedback);	
+				}
+				else if($this->logInModel->userLoggedIn())
+				{
+					$response .= $this->generateLogoutButtonHTML($this->userInputFeedback);
+				}
+			}
+
+			return $response;
+		}
+
 	//gets bool as argument, from model->controller
 	public function setUserInputResponse($dataValidationResult)
 	{	
 		$key = '';
 
 			switch($this->inputSection)
-			{
-				
+			{		
 				case FeedbackStrings::SECTION_LOGIN:
 				$key = $this->logInModel->getMessageKey();
 				$this->userInputFeedback = FeedbackStrings::Get($this->inputSection, $key);
+				$this->keepName = $this->userNameLoginInput();
 				break;
 
 				case FeedbackStrings::SECTION_REGISTER:
 					switch($dataValidationResult)
 					{
 						case true:
-						$this->userInputFeedback = "Registered new user.";
+						$this->userInputFeedback = FeedbackStrings::Get($this->inputSection, FeedbackStrings::REGISTRATIONSUCCESS);
+						$this->keepName = $this->regUserNameInput();
+						$this->response();
 						break;
 
 						case false:
@@ -82,8 +92,7 @@ class LoginView {
 						$this->userInputFeedback = FeedbackStrings::Get($this->inputSection, $key);
 						break;
 					}
-				break;
-				
+				break;	
 			}
 	}	
 
@@ -99,7 +108,7 @@ class LoginView {
 
 	public function userPasswordLoginInput()
 	{
-		return  $_POST[self::$password];
+		return $_POST[self::$password];
 	}
 
 	public function regUserNameInput()
@@ -137,6 +146,15 @@ class LoginView {
 			$this->inputSection = FeedbackStrings::SECTION_REGISTER;
 			return true;
 		}		
+	}
+
+	public function keepSubmittedName()
+	{
+		if($this->regModel->wasRegistrationSuccessful() ||$this->hasUserTriedLogin())
+		{
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -195,7 +213,7 @@ class LoginView {
 					<p id="' . self::$messageId . '">' . $message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="'. ($this->hasUserTriedLogin() ? $this->userNameLoginInput() : "") . '" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="'. ($this->keepSubmittedName() ? $this->keepName : "") . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />

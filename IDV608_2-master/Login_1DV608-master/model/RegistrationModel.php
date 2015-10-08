@@ -6,6 +6,7 @@ class RegistrationModel{
 
 	private $userName;
 	private $password;
+	private $validRegister;
 
 	public function tryRegister(UserCredentials $uc, &$user)
 	{
@@ -17,11 +18,17 @@ class RegistrationModel{
 		if(!User::checkIfUserExists($this->userName))
 		{
 			User::AddUser($user);
+			$this->validRegister = true;
 			return true;
 		}
 		else
 		{
 			return false;
 		}
+	}
+
+	public function wasRegistrationSuccessful()
+	{
+		return $this->validRegister;
 	}
 }

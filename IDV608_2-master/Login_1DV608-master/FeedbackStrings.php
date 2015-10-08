@@ -18,19 +18,16 @@ class FeedbackStrings
 
 	public static function LoadLanguageFile($filename)
 	{
-
 		self::$FeedbackStrings = parse_ini_file($filename, true);
-
 	}
 
 	public static function Get($section, $string)
 	{
-
-		return self::$FeedbackStrings[$section][$string];
-
+		if(isset($string))
+		{
+			return self::$FeedbackStrings[$section][$string];
+		}		
 	}
 	
-
-
 }
 

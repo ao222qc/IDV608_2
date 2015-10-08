@@ -14,17 +14,17 @@ require_once('FeedbackStrings.php');
 require_once('Settings.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
+//error_reporting(E_ALL);
+//ini_set('display_errors', 'On');
 
-FeedbackStrings::LoadLanguageFile("eng.ini.txt");
+FeedbackStrings::LoadLanguageFile("eng.ini");
 
 //CREATE OBJECTS OF THE VIEWS
 $loginModel = new LoginModel();
 $regModel = new RegistrationModel();
 $uc = new UserCredentials();
 
-$v = new LoginView($loginModel, $uc);
+$v = new LoginView($loginModel, $uc, $regModel);
 $dtv = new DateTimeView();
 $lv = new LayoutView();
 
