@@ -42,16 +42,13 @@ class LoginModel {
 		}
 		$user = User::Get($this->suppliedUserName);
 
-		if ($user != NULL)
+		if ($user != NULL && $user->comparePassword($this->suppliedPassword))
 		{
-			if ($user->comparePassword($this->suppliedPassword))
-			{		
-				if(!isset($_SESSION[self::$userLoginSession]))
-				{
-					$valid = true;
-					$_SESSION[self::$userLoginSession] = true;	
-					$this->messageKey = FeedbackStrings::LOGINSUCCESS;
-				}
+			if(!isset($_SESSION[self::$userLoginSession]))
+			{
+				$valid = true;
+				$_SESSION[self::$userLoginSession] = true;	
+				$this->messageKey = FeedbackStrings::LOGINSUCCESS;
 			}
 		}
 		else
